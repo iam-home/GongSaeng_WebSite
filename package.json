@@ -1,0 +1,15 @@
+{
+  "_comment": "오류나면 이름 a로 바꿔. 원래 a였는데 website로 바꾼거임",
+  "name": "website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
