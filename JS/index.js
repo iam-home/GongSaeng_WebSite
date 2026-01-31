@@ -17,16 +17,14 @@ app.listen(8080, function(){
 const path = require('path');
 app.use('/CSS', express.static(path.join(__dirname, '..', 'CSS')));
 
+
+
 app.get('/', function(req, res){
     res.sendFile(path.join(__dirname, '..', 'HTML', 'index.html'));
 });
 
-app.get('/Signin', function(req, res){
-    res.sendFile(path.join(__dirname, '..', 'HTML', 'SignIn.html'));
-});
-
-app.get('/Signup', function(req, res){
-    res.sendFile(path.join(__dirname, '..', 'HTML', 'SignUp.html'));
+app.get('/Login', function(req, res){
+    res.sendFile(path.join(__dirname, '..', 'HTML', 'Login.html'));
 });
 
 
