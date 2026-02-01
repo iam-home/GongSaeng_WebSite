@@ -5,6 +5,8 @@
  * 서버 닫기 -> Ctrl + C
  * 
  * 서버 수동 켜기 -> node index.js // 쓸 일은 없을듯
+ * 
+ * cd "C:\School_Programming\_WebSite\WebSite\JS"
  */
 
 const express = require('express');
@@ -25,7 +27,6 @@ app.get('/', function(req, res){
 
 app.get('/Login', function(req, res){
     res.sendFile(path.join(__dirname, '..', 'HTML', 'Login.html'));
-<<<<<<< HEAD
 });
 
 app.get('/ToDo', function(req, res){
@@ -46,10 +47,11 @@ app.get('/Data', function(req, res){
 
 app.get('/WRITE', function(req, res){
     res.sendFile(path.join(__dirname, '..', 'HTML', 'WRITE.html'));
-=======
->>>>>>> 740d9fcada7c415b7a211e5eeb29e0090ada6c81
 });
 
+app.get('/WhenForgotPassword', function(req, res){
+    res.sendFile(path.join(__dirname, '..', 'HTML', 'WhenForgotPassword.html'));
+});
 
 
 
