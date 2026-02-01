@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <input type="text" id="userInput" placeholder="아무거나 입력해보세요">
+
+<button onclick="displayValue()">출력하기</button>
+
+<p id="result">여기에 입력한 값이 나옵니다.</p>
+
+<script>
+
+    function displayValue(){
+        const val = document.getElementById('userInput').value;
+        const resultElement = document.getElementById('result');
+        resultElement.innerHTML = val;
+        }
+
+</script>
+
+</body>
+</html>
