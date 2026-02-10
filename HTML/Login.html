@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <title>Test</title>
+    <title>공생</title>
 </head>
 <body>
     
@@ -17,62 +17,131 @@
         
         <a href="WhenForgotPassword.html">forgot your Password?</a>
         
-        <h1>Create Account</h1>
+        <!-- <h1>Create Account</h1>
         <h4><input type="email" id="email_2" placeholder="이메일"></h4>
         <h4><input type="password" id="password_2" placeholder="비밀번호"></h4>
         <h4><input type="password" id="passwordCheck" placeholder="비밀번호 재입력"></h4>
-        <h4><input type="button" value="회원가입" id="signUp"/></h4>
+        <h4><input type="button" value="회원가입" id="signUp"/></h4> -->
+
+        <div id="history"></div>
+         <div><input type="button" value="create" id="create_btn"/></div>
         
+
     </div>
 
-
-    
     <script>
-    
+    // 1. Supabase 초기화
     const supabaseUrl = 'SECRET_REMOVED';
     const supabaseKey = 'SCRET_REMOVED';
     const client = supabase.createClient(supabaseUrl, supabaseKey);
 
+    // --- [인증 관련 함수] ---
 
+    // 로그인 처리
     async function signInWithEmail() {
-    const email = document.querySelector("#email").value;
-    const password = document.querySelector("#password").value;
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
 
-    const { data, error } = await client.auth.signInWithPassword({
-        email: email,
-        password: password,
-    });
+        const { data, error } = await client.auth.signInWithPassword({
+            email: email,
+            password: password,
+        });
 
-    if (error) {
-        alert("로그인 실패: " + error.message);
-    } else {
-        alert("로그인 성공! 환영합니다.");
-        console.log(data);
-        location.reload();
-    }
-    }
-
-    document.querySelector("#login").addEventListener("click", signInWithEmail);
-    
-    
-    async function checkLogin() {
-        const authInfo = await client.auth.getSession();
-        const session = authInfo.data.session;
-        document.querySelector("#login").style.display = "none";
-        document.querySelector("#logout").style.display = "none";
-        if (session === null) {
-            document.querySelector("#login").style.display = "inline";
+        if (error) {
+            alert("로그인 실패: " + error.message);
         } else {
-            document.querySelector("#logout").style.display = "inline";
+            // location.reload();
+            window.history.back();
         }
     }
-    checkLogin();
-    
+
+    // 로그아웃 처리
     async function signOut() {
-        const { error } = await client.auth.signOut();
+        await client.auth.signOut();
         checkLogin();
     }
-    document.querySelector("#logout").addEventListener("click", signOut);
+
+    // 로그인 상태 체크 및 UI 변경
+    async function checkLogin() {
+        const { data: { session } } = await client.auth.getSession();
+        
+        const loginBtn = document.querySelector("#login");
+        const logoutBtn = document.querySelector("#logout");
+
+        if (!session) {
+            loginBtn.style.display = "inline";
+            logoutBtn.style.display = "none";
+        } else {
+            loginBtn.style.display = "none";
+            logoutBtn.style.display = "inline";
+        }
+    }
+
+    // --- [데이터(CRUD) 관련 함수] ---
+
+    // 목록 불러오기
+    async function refreshHistory() {
+        let { data: record, error } = await client.from("page").select("*");
+        
+        if (error) {
+            console.error("데이터 로드 실패:", error.message);
+            return;
+        }
+
+        let tag = "";
+        record.forEach(item => {
+            tag += `
+                <div style="margin:20px 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                    <h2>${item.title}</h2>
+                    <div>${item.body}</div>
+                    <p>
+                        <input type="button" value="delete" onclick="deleteRecord(${item.id})"/>
+                    </p>
+                </div>`;
+        });
+        document.querySelector("#history").innerHTML = tag;
+    }
+
+    // 데이터 생성 (Create)
+    async function recordHandler() {
+        const title = prompt("title?");
+        const body = prompt("body?");
+        
+        if(!title || !body) return; // 취소 시 중단
+
+        const { error } = await client
+            .from("page")
+            .insert([{ title, body }]);
+
+        if (error) alert("저장 실패: " + error.message);
+        refreshHistory();
+    }
+
+    // 데이터 삭제 (Delete)
+    async function deleteRecord(id) {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+
+        const { error } = await client
+            .from("page")
+            .delete()
+            .eq("id", id);
+
+        if (error) alert("삭제 실패: " + error.message);
+        refreshHistory();
+    }
+
+    // --- [이벤트 리스너 및 초기 실행] ---
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        // 버튼 이벤트 연결
+        document.querySelector("#login").addEventListener("click", signInWithEmail);
+        document.querySelector("#logout").addEventListener("click", signOut);
+        document.querySelector("#create_btn").addEventListener("click", recordHandler);
+
+        // 초기 데이터 로드
+        checkLogin();
+        refreshHistory();
+    });
 </script>
 
 </body>
