@@ -3,38 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <title>Test</title>
 </head>
 <body>
     
     <div>
         <h1>Login</h1>
-        <h4>아이디 <input type="text"></h4>
-        <h4>비밀번호 <input type="password"></h4>
-        <h3>
-            <button style="padding: 10px 30px;" onclick="Login(1)">login</button>
-        </h3>
-        <a href="WhenForgotPassword">forgot your Password?</a>
+        <h4><input type="email" id="email" placeholder="이메일"></h4>
+        <h4><input type="password" id="password" placeholder="비밀번호"></h4>
+        <h4><input type="button" value="로그인" id="login"></h4>
+        <h4><input type="button" value="logout" id="logout"/></h4>
+        
+        <a href="WhenForgotPassword.html">forgot your Password?</a>
         
         <h1>Create Account</h1>
-        <h4>아이디 <input type="text"/></h4>
-        <h4>비밀번호 <input type="password"/></h4>
-        <h4>비밀번호 재입력 <input type="password"/></h4>
-        <h3>
-            <button style="padding: 10px 30px;" onclick="Login(2)">create account</button>
-        </h3>
+        <h4><input type="email" id="email_2" placeholder="이메일"></h4>
+        <h4><input type="password" id="password_2" placeholder="비밀번호"></h4>
+        <h4><input type="password" id="passwordCheck" placeholder="비밀번호 재입력"></h4>
+        <h4><input type="button" value="회원가입" id="signUp"/></h4>
         
     </div>
 
 
     
     <script>
+    
+    const supabaseUrl = 'SECRET_REMOVED';
+    const supabaseKey = 'SCRET_REMOVED';
+    const client = supabase.createClient(supabaseUrl, supabaseKey);
 
-        function Login(e){
-            document.write(e, " test")
+
+    async function signInWithEmail() {
+    const email = document.querySelector("#email").value;
+    const password = document.querySelector("#password").value;
+
+    const { data, error } = await client.auth.signInWithPassword({
+        email: email,
+        password: password,
+    });
+
+    if (error) {
+        alert("로그인 실패: " + error.message);
+    } else {
+        alert("로그인 성공! 환영합니다.");
+        console.log(data);
+        location.reload();
+    }
+    }
+
+    document.querySelector("#login").addEventListener("click", signInWithEmail);
+    
+    
+    async function checkLogin() {
+        const authInfo = await client.auth.getSession();
+        const session = authInfo.data.session;
+        document.querySelector("#login").style.display = "none";
+        document.querySelector("#logout").style.display = "none";
+        if (session === null) {
+            document.querySelector("#login").style.display = "inline";
+        } else {
+            document.querySelector("#logout").style.display = "inline";
         }
-
-    </script>
+    }
+    checkLogin();
+    
+    async function signOut() {
+        const { error } = await client.auth.signOut();
+        checkLogin();
+    }
+    document.querySelector("#logout").addEventListener("click", signOut);
+</script>
 
 </body>
 </html>
