@@ -38,6 +38,7 @@
     </div>
 
     <div class="Login-Button">
+      <button onclick="checkLogin()">aa</button>
       <button onclick="location.href='Login'">Login</button>
     </div>
 
@@ -53,6 +54,16 @@
   <div><button onclick="location.href='FAQ'">자주 묻는 질문</button></div>
 
   <script>
+  
+  // index.html의 스크립트 부분
+async function checkLogin() {
+    const { data: { session } } = await client.auth.getSession();
+    if (session) {
+        // 로그인 정보가 있으면 변수에 담아 쓰기
+        const userEmail = session.user.email; 
+        document.querySelector("#user_info").innerText = userEmail + "님 환영합니다!";
+    }
+}
 
   </script>
 

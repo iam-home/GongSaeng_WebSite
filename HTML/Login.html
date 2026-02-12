@@ -7,6 +7,7 @@
     <title>공생</title>
 </head>
 <body>
+    <script src="Login.js"></script>
     
     <div>
         <h1>Login</h1>
@@ -28,121 +29,6 @@
         
 
     </div>
-
-    <script>
-    // 1. Supabase 초기화
-    const supabaseUrl = 'SECRET_REMOVED';
-    const supabaseKey = 'SCRET_REMOVED';
-    const client = supabase.createClient(supabaseUrl, supabaseKey);
-
-    // --- [인증 관련 함수] ---
-
-    // 로그인 처리
-    async function signInWithEmail() {
-        const email = document.querySelector("#email").value;
-        const password = document.querySelector("#password").value;
-
-        const { data, error } = await client.auth.signInWithPassword({
-            email: email,
-            password: password,
-        });
-
-        if (error) {
-            alert("로그인 실패: " + error.message);
-        } else {
-            // location.reload();
-            window.history.back();
-        }
-    }
-
-    // 로그아웃 처리
-    async function signOut() {
-        await client.auth.signOut();
-        checkLogin();
-    }
-
-    // 로그인 상태 체크 및 UI 변경
-    async function checkLogin() {
-        const { data: { session } } = await client.auth.getSession();
-        
-        const loginBtn = document.querySelector("#login");
-        const logoutBtn = document.querySelector("#logout");
-
-        if (!session) {
-            loginBtn.style.display = "inline";
-            logoutBtn.style.display = "none";
-        } else {
-            loginBtn.style.display = "none";
-            logoutBtn.style.display = "inline";
-        }
-    }
-
-    // --- [데이터(CRUD) 관련 함수] ---
-
-    // 목록 불러오기
-    async function refreshHistory() {
-        let { data: record, error } = await client.from("page").select("*");
-        
-        if (error) {
-            console.error("데이터 로드 실패:", error.message);
-            return;
-        }
-
-        let tag = "";
-        record.forEach(item => {
-            tag += `
-                <div style="margin:20px 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                    <h2>${item.title}</h2>
-                    <div>${item.body}</div>
-                    <p>
-                        <input type="button" value="delete" onclick="deleteRecord(${item.id})"/>
-                    </p>
-                </div>`;
-        });
-        document.querySelector("#history").innerHTML = tag;
-    }
-
-    // 데이터 생성 (Create)
-    async function recordHandler() {
-        const title = prompt("title?");
-        const body = prompt("body?");
-        
-        if(!title || !body) return; // 취소 시 중단
-
-        const { error } = await client
-            .from("page")
-            .insert([{ title, body }]);
-
-        if (error) alert("저장 실패: " + error.message);
-        refreshHistory();
-    }
-
-    // 데이터 삭제 (Delete)
-    async function deleteRecord(id) {
-        if (!confirm("정말 삭제하시겠습니까?")) return;
-
-        const { error } = await client
-            .from("page")
-            .delete()
-            .eq("id", id);
-
-        if (error) alert("삭제 실패: " + error.message);
-        refreshHistory();
-    }
-
-    // --- [이벤트 리스너 및 초기 실행] ---
-    
-    document.addEventListener("DOMContentLoaded", () => {
-        // 버튼 이벤트 연결
-        document.querySelector("#login").addEventListener("click", signInWithEmail);
-        document.querySelector("#logout").addEventListener("click", signOut);
-        document.querySelector("#create_btn").addEventListener("click", recordHandler);
-
-        // 초기 데이터 로드
-        checkLogin();
-        refreshHistory();
-    });
-</script>
 
 </body>
 </html>
