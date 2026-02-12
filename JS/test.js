@@ -1,1 +1,5 @@
-document.write("test")
+console.log("aaa")
+
+function test(){
+    document.write("test")
+}

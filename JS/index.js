@@ -12,6 +12,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.static(__dirname));
+
 app.listen(5000, function(){
     console.log('listening on 5000');
 });
@@ -27,6 +29,10 @@ app.get('/', function(req, res){
 
 app.get('/Login', function(req, res){
     res.sendFile(path.join(__dirname, '..', 'HTML', 'Login.html'));
+});
+
+app.get('/Account', function(req, res){ // 삭제 예정
+    res.sendFile(path.join(__dirname, '..', 'HTML', 'Account.html'));
 });
 
 app.get('/ToDo', function(req, res){
@@ -56,7 +62,7 @@ app.get('/WhenForgotPassword', function(req, res){
 
 
 app.get('/t', function(req, res){
-    res.sendFile(path.join(__dirname, '..', 'HTML', '00_test.html'));
+    res.sendFile(path.join(__dirname, '..', 'HTML', 'test.html'));
 });
 
 

@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="/CSS/main.css">
+    <script src="Login.js"></script>
   </head>
 
   <body>
@@ -21,7 +22,7 @@
     </button> -->
     <!--메뉴 버튼 같은거임. 하고는 싶은데 좀 이상함. 기억 안 나면 주석풀고 창 사이즈 작게 해보셈-->
 
-    <div class="User">
+    <div id="User" class="User">
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="ToDo" style="width: 70px;">할 활동</a> <!--할 활동으로 바꿀까. 일정이라는 표현 별로같은데-->
@@ -38,8 +39,8 @@
     </div>
 
     <div class="Login-Button">
-      <button onclick="checkLogin()">aa</button>
-      <button onclick="location.href='Login'">Login</button>
+      <button onclick="checkingLogin()">aa</button>
+      <button id="auth-btn" onclick="location.href='Login'">Login</button>
     </div>
 
   </div>
@@ -54,16 +55,22 @@
   <div><button onclick="location.href='FAQ'">자주 묻는 질문</button></div>
 
   <script>
-  
-  // index.html의 스크립트 부분
-async function checkLogin() {
-    const { data: { session } } = await client.auth.getSession();
-    if (session) {
-        // 로그인 정보가 있으면 변수에 담아 쓰기
-        const userEmail = session.user.email; 
-        document.querySelector("#user_info").innerText = userEmail + "님 환영합니다!";
+
+    async function checkingLogin(){ // 구조 좀 확실하게 잡아놔라. 헷갈림
+
+      const isLogin = await checkLogin();
+      const authBtn = document.querySelector("#auth-btn");
+
+      if (isLogin){
+        document.getElementById('User').style.display = 'block';
+        authBtn.innerText = "Logout";
+      }
+
     }
-}
+  document.addEventListener("DOMContentLoaded", async () => {
+    await checkingLogin();
+    document.querySelector("#logout").addEventListener("click", signOut);
+});
 
   </script>
 

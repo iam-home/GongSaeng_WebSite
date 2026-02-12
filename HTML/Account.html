@@ -1,0 +1,37 @@
+<!--삭제 예정-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공생</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="Login.js"></script>
+</head>
+<body>
+
+    <button id="logout" style="display: none;">Logout</button>
+
+    <script>
+
+    async function checkingLogin(){
+        const isLogin = await checkLogin();
+
+        if (!isLogin){
+            location.href='Login'; // 로그인 안돼있으면 로그인 페이지로 넘기기
+        } else {
+            document.getElementById('logout').style.display = 'block'; // 로그인 돼있으면 로그아웃 띄워주기
+            location.href='/'; // 왜 로그인하고 나면 다시 일로 오지
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+    checkingLogin();
+    document.querySelector("#logout").addEventListener("click", signOut);
+});
+
+    </script>
+
+</body>
+</html>

@@ -1,3 +1,5 @@
+// 로그인 말고 글 만들고 삭제하고 뭐 그런 코드 있을 수 있음. 보고 로그인만 남기고 다 지우셈
+
 const supabaseUrl = 'SECRET_REMOVED';
 const supabaseKey = 'SCRET_REMOVED';
 const client = supabase.createClient(supabaseUrl, supabaseKey);
@@ -30,8 +32,10 @@ async function checkLogin() {
     
     if (session) { // 로그인 했을 때
         console.log("Login");
+        return true;
     } else { // 로그인 안 했을 때
         console.log("Not Login");
+        return false;
     }
 }
 
@@ -85,7 +89,6 @@ async function deleteRecord(id) {
 
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#login").addEventListener("click", signInWithEmail);
-    document.querySelector("#logout").addEventListener("click", signOut);
     document.querySelector("#create_btn").addEventListener("click", recordHandler);
     
     checkLogin();
