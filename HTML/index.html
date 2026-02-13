@@ -16,7 +16,7 @@
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">동아리 소개하는 칸을 만들건데 제목 뭐로 하지</a>
+    <a class="navbar-brand" href="/">여기에 뭘 쓰면 좋을까</a>
     <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button> -->
@@ -39,24 +39,25 @@
     </div>
 
     <div class="Login-Button">
-      <button onclick="checkingLogin()">aa</button>
-      <button id="auth-btn" onclick="location.href='Login'">Login</button>
+      <!-- <button onclick="checkingLogin()">check login</button> -->
+
+      <button id="auth-btn" onclick="LoginPage()">Login</button>
     </div>
 
   </div>
 </nav>
 
-  <p>자주 묻는 질문 // 이걸 저 밑에 둘 생각임.</p>
-  <p>전화번호 or 이메일 or 카톡 -> 얘랑 같이</p>
 
-  <br>
-  <div><a href="FAQ">자주 묻는 질문</a></div>
-  <br> <!--뭐가 더 나음?-->
-  <div><button onclick="location.href='FAQ'">자주 묻는 질문</button></div>
+
+  <!-- 본문글 쓰기. faq 버튼도 밑에 냅두기 -->
+  <!-- <br>
+  <div><a href="FAQ">자주 묻는 질문</a></div> -->
+
+
 
   <script>
 
-    async function checkingLogin(){ // 구조 좀 확실하게 잡아놔라. 헷갈림
+    async function checkingLogin(){
 
       const isLogin = await checkLogin();
       const authBtn = document.querySelector("#auth-btn");
@@ -67,9 +68,22 @@
       }
 
     }
+
+    async function LoginPage() {
+
+      const isLogin = await checkLogin();
+      
+      if (isLogin) {
+        const { error } = await client.auth.signOut();
+        document.querySelector("#auth-btn").addEventListener("click", signOut);
+        location.reload();
+      } else {
+        location.href = 'Login';
+      }
+      
+    }
   document.addEventListener("DOMContentLoaded", async () => {
     await checkingLogin();
-    document.querySelector("#logout").addEventListener("click", signOut);
 });
 
   </script>

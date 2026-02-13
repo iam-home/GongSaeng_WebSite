@@ -1,11 +1,10 @@
-// 로그인 말고 글 만들고 삭제하고 뭐 그런 코드 있을 수 있음. 보고 로그인만 남기고 다 지우셈
-
 const supabaseUrl = 'SECRET_REMOVED';
 const supabaseKey = 'SCRET_REMOVED';
 const client = supabase.createClient(supabaseUrl, supabaseKey);
 
 async function signInWithEmail() {
     const email = document.querySelector("#email").value;
+    // const email = `${}` // 한 사람당 계정 하나 할라면 위에서 유저네임 받고, 여기서 뒤에 @gmail.com 붙여서 밑에서 처리하셈
     const password = document.querySelector("#password").value;
     
     const { data, error } = await client.auth.signInWithPassword({
@@ -16,7 +15,6 @@ async function signInWithEmail() {
     if (error) {
         alert("로그인 실패: " + error.message);
     } else {
-        // location.reload();
         window.history.back();
     }
 }
@@ -39,58 +37,80 @@ async function checkLogin() {
     }
 }
 
-async function refreshHistory() {
-    let { data: record, error } = await client.from("page").select("*");
-    
-    if (error) {
-        console.error("데이터 로드 실패: ", error.message);
-        return;
+    async function LoginPage() {
+      const isLogin = await checkLogin();
+      
+      if (isLogin) {
+        const { error } = await client.auth.signOut();
+        document.querySelector("#auth-btn").addEventListener("click", signOut);
+      }
+      
     }
-    
-    let tag = "";
-    record.forEach(item => {
-        tag += `
-                <div style="margin:20px 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                    <h2>${item.title}</h2>
-                    <div>${item.body}</div>
-                    <p>
-                        <input type="button" value="delete" onclick="deleteRecord(${item.id})"/>
-                    </p>
-                </div>`;
-    });
-    document.querySelector("#history").innerHTML = tag;
-}
 
-async function recordHandler() {
-    const title = prompt("title?");
-    const body = prompt("body?");
-    
-    if (!title || !body) return;
-    
-    const { error } = await client
-        .from("page")
-        .insert([{ title, body }]);
-    
-    if (error) alert("저장 실패: " + error.message);
-    refreshHistory();
-}
+document.addEventListener("DOMContentLoaded", async () => {
+    const loginBtn = document.querySelector("#login");
+    if (loginBtn) loginBtn.addEventListener("click", signInWithEmail);
 
-async function deleteRecord(id) {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
-    
-    const { error } = await client
-        .from("page")
-        .delete()
-        .eq("id", id);
-    
-    if (error) alert("삭제 실패: " + error.message);
-    refreshHistory();
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector("#login").addEventListener("click", signInWithEmail);
-    document.querySelector("#create_btn").addEventListener("click", recordHandler);
+    // document.querySelector("#create_btn").addEventListener("click", recordHandler);
     
     checkLogin();
-    refreshHistory();
+    // refreshHistory();
 });
+
+
+
+
+
+
+
+
+
+// 쓸 수 있으면 쓰셈
+
+// async function refreshHistory() {
+//     let { data: record, error } = await client.from("page").select("*");
+    
+//     if (error) {
+//         console.error("데이터 로드 실패: ", error.message);
+//         return;
+//     }
+    
+//     let tag = "";
+//     record.forEach(item => {
+//         tag += `
+//                 <div style="margin:20px 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+//                     <h2>${item.title}</h2>
+//                     <div>${item.body}</div>
+//                     <p>
+//                         <input type="button" value="delete" onclick="deleteRecord(${item.id})"/>
+//                     </p>
+//                 </div>`;
+//     });
+//     document.querySelector("#history").innerHTML = tag;
+// }
+
+// async function recordHandler() {
+//     const title = prompt("title?");
+//     const body = prompt("body?");
+    
+//     if (!title || !body) return;
+    
+//     const { error } = await client
+//         .from("page")
+//         .insert([{ title, body }]);
+    
+//     if (error) alert("저장 실패: " + error.message);
+//     refreshHistory();
+// }
+
+// async function deleteRecord(id) {
+//     if (!confirm("정말 삭제하시겠습니까?")) return;
+    
+//     const { error } = await client
+//         .from("page")
+//         .delete()
+//         .eq("id", id);
+    
+//     if (error) alert("삭제 실패: " + error.message);
+//     refreshHistory();
+// }
