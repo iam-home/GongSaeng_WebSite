@@ -1,10 +1,11 @@
 const supabaseUrl = 'SECRET_REMOVED';
 const supabaseKey = 'SCRET_REMOVED';
 const client = supabase.createClient(supabaseUrl, supabaseKey);
+// let 변수 = 0; // 함수에 매개변수 넣고 쓰면 됨.
 
 async function signInWithEmail() {
-    const email = document.querySelector("#email").value;
-    // const email = `${}` // 한 사람당 계정 하나 할라면 위에서 유저네임 받고, 여기서 뒤에 @gmail.com 붙여서 밑에서 처리하셈
+    const ID = document.querySelector("#ID").value;
+    const email = `${ID}@gmail.com`; // 한 사람당 계정 하나 할라면 위에서 유저네임 받고, 여기서 뒤에 @gmail.com 붙여서 밑에서 처리하셈
     const password = document.querySelector("#password").value;
     
     const { data, error } = await client.auth.signInWithPassword({
@@ -29,10 +30,10 @@ async function checkLogin() {
     
     
     if (session) { // 로그인 했을 때
-        console.log("Login");
+        // console.log("Login"); // 이거 반복해서 출력됨. 그래서 없애버림ㅋ
         return true;
     } else { // 로그인 안 했을 때
-        console.log("Not Login");
+        // console.log("Not Login");
         return false;
     }
 }
@@ -42,7 +43,8 @@ async function checkLogin() {
       
       if (isLogin) {
         const { error } = await client.auth.signOut();
-        document.querySelector("#auth-btn").addEventListener("click", signOut);
+        const logoutBtn = document.querySelector("#auth-btn");
+        if (logoutBtn) logoutBtn.addEventListener("click", signOut);
       }
       
     }

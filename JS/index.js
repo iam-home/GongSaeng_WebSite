@@ -9,6 +9,7 @@
  * cd "C:\School_Programming\_WebSite\WebSite\JS"
  */
 
+// 나중에 재사용 해야되는 코드가 생기거나 뭐 많아지거나 하면 index.js는 그쪽으로 넘겨주고 여기는 server.js로 바꾸셈
 const express = require('express');
 const app = express();
 
@@ -55,7 +56,7 @@ app.get('/WRITE', function(req, res){
     res.sendFile(path.join(__dirname, '..', 'HTML', 'WRITE.html'));
 });
 
-app.get('/WhenForgotPassword', function(req, res){
+app.get('/WhenForgotPassword', function(req, res){ // 지울거같은데
     res.sendFile(path.join(__dirname, '..', 'HTML', 'WhenForgotPassword.html'));
 });
 
