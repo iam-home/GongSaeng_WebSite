@@ -13,7 +13,7 @@
         <h1>Login</h1>
         <h4><input type="email" id="ID" placeholder="아아디"></h4>
         <h4><input type="password" id="password" placeholder="비밀번호"></h4>
-        <h4><input type="button" value="로그인" id="login"></h4>
+        <h4><input type="button" value="로그인" id="login" onclick="fuckingMessage()"></h4>
         
         <!-- <a href="WhenForgotPassword.html">forgot your Password?</a>  -->
         <!-- if (각자 계정 하나) 필요함
@@ -25,11 +25,22 @@
         <h4><input type="password" id="passwordCheck" placeholder="비밀번호 재입력"></h4>
         <h4><input type="button" value="회원가입" id="signUp"/></h4> -->
 
-        <div id="history"></div>
+        <!-- <div id="history"></div> -->
         <!-- <div><input type="button" value="create" id="create_btn"/></div> -->
         
 
     </div>
+
+    <script>
+
+        async function fuckingMessage() {
+            const isLogin = await checkLogin();
+            if (isLogin) {
+                randomStart();
+            }
+        }
+
+    </script>
 
 </body>
 </html>

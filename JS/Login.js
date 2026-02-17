@@ -1,6 +1,8 @@
 const supabaseUrl = 'SECRET_REMOVED';
 const supabaseKey = 'SCRET_REMOVED';
 const client = supabase.createClient(supabaseUrl, supabaseKey);
+
+const message = ["안녕하세요", "감사합니다", "반편성이게맞음?", "졸리다"];
 // let 변수 = 0; // 함수에 매개변수 넣고 쓰면 됨.
 
 async function signInWithEmail() {
@@ -16,7 +18,7 @@ async function signInWithEmail() {
     if (error) {
         alert("로그인 실패: " + error.message);
     } else {
-        window.history.back();
+        randomStart()
     }
 }
 
@@ -28,10 +30,9 @@ async function signOut() {
 async function checkLogin() {
     const { data: { session } } = await client.auth.getSession();
     
-    
     if (session) { // 로그인 했을 때
         // console.log("Login"); // 이거 반복해서 출력됨. 그래서 없애버림ㅋ
-        return true;
+        return true; // isLogin
     } else { // 로그인 안 했을 때
         // console.log("Not Login");
         return false;
@@ -59,7 +60,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     // refreshHistory();
 });
 
+function getRandomMessage(bool, message) {
+    if (bool){
+      const randomIndex = Math.floor(Math.random() * message.length);
+      return message[randomIndex];
+    }
+}
 
+function randomStart() {
+    const selectedMessage = getRandomMessage(true, message);
+    alert(selectedMessage);
+    window.history.back(); // 로그인 문제있을 때 얘 끄고 콘솔 찍어보셈
+}
 
 
 

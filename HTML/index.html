@@ -24,7 +24,7 @@
     <div id="User" class="User">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="ToDo" style="width: 70px;">할 활동</a> <!--할 활동으로 바꿀까. 일정이라는 표현 별로같은데-->
+          <a class="nav-link active" aria-current="page" href="ToDo" style="width: 102px;">동아리 일정</a> <!--할 활동으로 바꿀까. 일정이라는 표현 별로같은데-->
         </li>
         <li class="nav-item">
           <a class="nav-link" href="TimeLine" style="width: 86px;">활동 기록</a> <!--타임라인? 어떤 식으로 기록하지-->
@@ -48,7 +48,7 @@
 
 
 
-  <h4>
+  <!-- <h4>
     4월 ACE 유전자, PCR 이론 조사<br>
     5월 ACE 유전자 PCR 실험<br>
     6월 동의보감 한약 기반 게임 제작 전 사전조사<br>
@@ -58,7 +58,8 @@
     10월 관광객의 증가가 미치는 문제점에 대한 해결방안 탐구<br>
     11월 동아리 결과 발표<br><br>
     <h5>디자인 어카냐 진짜</h5>
-  </h4>
+  </h4> -->
+
   <!-- 디자인은 진짜 아니다 싶음. 내가 만지면 안될거같음. 어캄? -->
   <!-- ㅏㅏㅏㅏㅏㅏㅏㅏ귀찮아
    반편성 진짜 어캄 어케이래 아니 3년 내내 친한 애들 전부 떨구는게말이됨?? 이건 진짜 뭔가있따-->
@@ -69,25 +70,28 @@
 
 
   <script>
-
     async function checkingLogin(){
 
       const isLogin = await checkLogin();
       const authBtn = document.querySelector("#auth-btn");
 
-      if (isLogin){
+      if (isLogin){        
         document.getElementById('User').style.display = 'block';
         authBtn.innerText = "Logout";
       }
-
+      
     }
+    
+    
 
-    async function LoginPage(admin) {
+
+    async function LoginPage() {
 
       const isLogin = await checkLogin();
       
       if (isLogin) {
         const { error } = await client.auth.signOut();
+        alert("잘가 or 정말로 로그아웃 하시겠습니까?")
         document.querySelector("#auth-btn").addEventListener("click", signOut);
         location.reload();
       } else {
