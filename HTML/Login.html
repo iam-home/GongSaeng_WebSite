@@ -15,19 +15,15 @@
         <h4><input type="password" id="password" placeholder="비밀번호"></h4>
         <h4><input type="button" value="로그인" id="login" onclick="fuckingMessage()"></h4>
         
-        <!-- <a href="WhenForgotPassword.html">forgot your Password?</a>  -->
-        <!-- if (각자 계정 하나) 필요함
-        if(통합 계정) 필요없음 -->
-        
-        <!-- <h1>Create Account</h1>
-        <h4><input type="email" id="email_2" placeholder="이메일"></h4>
-        <h4><input type="password" id="password_2" placeholder="비밀번호"></h4>
-        <h4><input type="password" id="passwordCheck" placeholder="비밀번호 재입력"></h4>
-        <h4><input type="button" value="회원가입" id="signUp"/></h4> -->
+        <!-- <a href="WhenForgotPassword">forgot your Password?</a> -->
+        <!-- 아마도 개발 예정. 지금 비번 찾기 페이지 없음. 필요하면 만드셈 -->
 
-        <!-- <div id="history"></div> -->
-        <!-- <div><input type="button" value="create" id="create_btn"/></div> -->
-        
+        <h1>Create Account</h1>
+        <h4><input type="email" id="signup-id" placeholder="아이디"></h4>
+        <h4><input type="password" id="signup-password" placeholder="비밀번호"></h4>
+        <h4><input type="password" id="password-confirm" placeholder="비밀번호 재입력"></h4><br>
+        <h4><input type="password" id="register-code" placeholder="동아리 코드"></h4>
+        <button id="signup-btn" onclick="signUp()">회원가입</button>
 
     </div>
 
@@ -39,6 +35,47 @@
                 randomStart();
             }
         }
+
+    async function signUp() {
+    const id = document.querySelector("#signup-id").value.trim();
+    const email = `${id}@gmail.com`;
+    const password = document.querySelector("#signup-password").value;
+    const confirm = document.querySelector("#password-confirm").value;
+    const code = document.querySelector("#register-code").value;
+
+    if (!email || !password) {
+        alert("아이디와 비밀번호를 모두 입력해주세요.");
+        return;
+    }
+
+    if (password !== confirm) {
+        alert("비밀번호가 일치하지 않습니다.");
+        return;
+    }
+
+    if (code !== "SCRET_REMOVED") {
+        alert("잘못된 동아리 코드");
+        return;
+    }
+
+    const { data, error } = await client.auth.signUp({
+        email: email,
+        password: password,
+    });
+
+    if (error) {
+        console.error("회원가입 에러:", error.message);
+        alert("회원가입 실패: " + error.message);
+    } else {
+        console.log("회원가입 성공:", data);
+        if (data.user && data.merged_user === undefined) {
+             alert("회원가입 성공! 이메일 함을 확인하여 인증을 완료해주세요.");
+        } else {
+             alert("회원가입이 완료되었습니다!");
+        }
+        location.href = "/";
+    }
+}
 
     </script>
 

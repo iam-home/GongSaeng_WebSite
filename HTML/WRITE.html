@@ -15,28 +15,100 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
 
     <div class="cancel-button">
-      <button onclick="location.href='Suggest'">X</button>
+      <button onclick="location.href=fromSource">X</button>
     </div>
 
     <div class="complete-button">
-      <button onclick="document.write('서버 and DB..?')">완료</button>
+      <button id="register" onclick="GO()">완료</button>
     </div>
 
     </nav>
     
     <div class="write">
-        <form action="">
-            <input type="text" name="title-input" id="title-input" placeholder="제목을 입력하세요">
-        </form>
-        
-        <form action="">
-            <textarea name="content-input" id="content-input" placeholder="내용을 입력하세요"></textarea>
-        </form>
+        <input id="admin" type="text" placeholder="제목을 입력하세요">
+        <textarea name="content-input" id="bodyValue" oninput="autoResize(this)" placeholder="내용을 입력하세요"></textarea>
     </div>
 
 
 
     <script>
+        let editId = null;
+        let fromSource = null;
+
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    editId = urlParams.get('id');
+    fromSource = urlParams.get('from');
+
+    if (editId) {
+        document.querySelector("#register").innerHTML = "수정 완료";
+        await loadExistingData(editId);
+    }
+    
+    if (fromSource === 'todo') document.querySelector("#admin").style.display = "block";
+    if (fromSource === 'timeline') document.querySelector("#admin").style.display = "none";
+    else if (fromSource === 'suggest') document.querySelector("#admin").style.display = "none";
+
+});
+
+
+async function loadExistingData(id) {
+    const targetTable = fromSource || 'Suggest';
+    const { data, error } = await client.from('Suggest').select('*').eq('id', id).single();
+
+    if (data) {
+        document.querySelector("#bodyValue").value = data.body;
+        autoResize(document.querySelector("#bodyValue"));
+    }
+}
+
+    async function GO() {
+    const { data: { session } } = await client.auth.getSession();
+    const title = document.querySelector("#admin").value;
+    const body = document.querySelector("#bodyValue").value;
+
+    let tableName = "";
+    let redirectUrl = "";
+    let dataToInsert = {};
+
+    if (fromSource === 'todo') {
+        tableName = 'ToDo';
+        redirectUrl = 'ToDo';
+        dataToInsert = { title: title, body: body };
+    } 
+    else if (fromSource === 'timeline') {
+        tableName = 'TimeLine';
+        redirectUrl = 'TimeLine';
+        dataToInsert = { body: body };
+    } 
+    else if (fromSource === 'suggest') {
+        tableName = 'Suggest';
+        redirectUrl = 'Suggest';
+        dataToInsert = { body: body, user_id: session.user.id };
+    }
+
+    if (editId) {
+        const { error } = await client.from(tableName).update(dataToInsert).eq('id', editId);
+        if (!error) {
+            alert("수정되었습니다!");
+            location.href = redirectUrl;
+        }
+    } else {
+        const { error } = await client.from(tableName).insert([dataToInsert]);
+        if (!error) {
+            alert("등록되었습니다!");
+            location.href = redirectUrl;
+        } else {
+            console.error("에러 발생:", error.message);
+            alert("저장에 실패했습니다.");
+        }
+    }
+}
 
     </script>
 

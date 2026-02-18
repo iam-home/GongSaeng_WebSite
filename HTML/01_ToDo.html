@@ -16,12 +16,12 @@
     
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">동아리 소개하는 칸을 만들건데 제목 뭐로 하지</a>
+    <a class="navbar-brand" href="/">공생</a>
 
     <div id="User">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="ToDo" style="width: 102px;">동아리 일정</a>
+          <a class="nav-link active" aria-current="page" href="ToDo" style="width: 113px; font-size: large; font-weight: bold;">동아리 일정</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="TimeLine" style="width: 86px;">활동 기록</a>
@@ -43,40 +43,79 @@
 </nav>
   <div id="Data"></div>
 
-
+  <button id="admin" onclick="location.href='WRITE?from=todo';">글쓰기</button>
 
     <script>
+    
+    async function ToDoDB() {
+    const { data: { session } } = await client.auth.getSession();
+    const adminEmails = ["SCRET_REMOVED"];
+    const isAdmin = session && adminEmails.includes(session.user.email);
 
-      async function 로그인했냐() {
-        const isLogin = await checkLogin();
+    const { data, error } = await client.from('ToDo').select('*');
 
-        if (!isLogin && !location.href.includes('index.html')) {
-          location.href = '/';
-          alert("로그인한 사용자만 이용할 수 있는 페이지입니다.");
+    if (error) {
+        console.error('데이터 조회 에러:', error);
+        return;
+    }
+
+    let tag = "";
+    for (let i = 0; i < data.length; i++) {
+        tag += `<div class="post-item" style="position: relative; margin: 20px 0; border: 1px solid #ddd; padding: 15px;">
+          <h2 style="color: blue;">${data[i].title}</h2>  
+          <p>${data[i].body}</p>
+            
+            <div class="menu-container" style="position: absolute; top: 10px; right: 10px;">
+                <button onclick="toggleMenu(${i})" style="border:none; background:none; cursor:pointer; font-size:20px;">⋮</button>
+                
+                <div id="menu-${i}" class="dropdown-menu" style="display:none; position: absolute; right: 0; background: white; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); z-index: 10;">
+                    
+
+                  
+                    ${(isAdmin) ? `
+                        <button onclick="deleteToDo(${data[i].id})" style="display:block; width:100%; padding: 5px 10px; border:none; background:none; cursor:pointer; color:red;">삭제</button>
+                    ` : ''}
+
+                </div>
+            </div>
+        </div>`;
+    } // ${isAdmin ? `<button onclick="updateToDo()" style="display:block; width:100%; padding: 5px 10px; border:none; background:none; cursor:pointer;">수정</button>` : ''}
+    document.querySelector("#Data").innerHTML = tag;
+}
+
+function toggleMenu(index) {
+    const menu = document.querySelector(`#menu-${index}`);
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+
+async function deleteToDo(id) {
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+    
+    const { error } = await client.from('ToDo').delete().eq('id', id);
+    
+    if (error) {
+        alert("삭제 실패: " + error.message);
+    } else {
+        alert("삭제되었습니다.");
+        ToDoDB();
+    }
+}
+
+window.onclick = function(event) {
+    if (!event.target.matches('button')) {
+        const dropdowns = document.getElementsByClassName("dropdown-menu");
+        for (let i = 0; i < dropdowns.length; i++) {
+            dropdowns[i].style.display = "none";
         }
-
-      }
-
-       async function ToDoDB() {
-            const { data, error } = await client.from('ToDo').select('*');
-
-            if (error) {
-                console.error('데이터 조회 에러:', error);
-                return;
-            }
-
-            let tag = "";
-            for (let i = 0; i < data.length; i++) { // 내가 과연 이 디자인을 살릴 수 있을까
-              tag += `<div style="margin:20px 0">
-                <h2 style="color: blue;">${data[i].title}</h2>
-                <p>${data[i].body}</p>
-                </div>`;
-            }
-            document.querySelector("#Data").innerHTML = tag;
-        }
+    }
+}
 
       ToDoDB();
-      setInterval(로그인했냐, 100);
+      isadmin();
 
     </script>
 

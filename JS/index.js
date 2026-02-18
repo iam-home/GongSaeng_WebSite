@@ -32,10 +32,6 @@ app.get('/Login', function(req, res){
     res.sendFile(path.join(__dirname, '..', 'HTML', 'Login.html'));
 });
 
-app.get('/Account', function(req, res){ // 삭제 예정
-    res.sendFile(path.join(__dirname, '..', 'HTML', 'Account.html'));
-});
-
 app.get('/ToDo', function(req, res){
     res.sendFile(path.join(__dirname, '..', 'HTML', '01_ToDo.html'));
 });
@@ -54,10 +50,6 @@ app.get('/Data', function(req, res){
 
 app.get('/WRITE', function(req, res){
     res.sendFile(path.join(__dirname, '..', 'HTML', 'WRITE.html'));
-});
-
-app.get('/WhenForgotPassword', function(req, res){ // 지울거같은데
-    res.sendFile(path.join(__dirname, '..', 'HTML', 'WhenForgotPassword.html'));
 });
 
 

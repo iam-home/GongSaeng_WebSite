@@ -15,7 +15,7 @@
     
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">동아리 소개하는 칸을 만들건데 제목 뭐로 하지</a>
+    <a class="navbar-brand" href="/">공생</a>
 
     <div id="User">
       <ul class="navbar-nav">
@@ -26,7 +26,7 @@
           <a class="nav-link" href="TimeLine" style="width: 86px;">활동 기록</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="Suggest" style="width: 86px;">건의 사항</a>
+          <a class="nav-link" href="Suggest" style="width: 95px; font-size: large; font-weight: bold;">건의 사항</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="Data" aria-disabled="true" style="width: 64px;">자료실</a>
@@ -42,43 +42,82 @@
 </nav>
 <div id="Data"></div>
 
-    <button class="write-button">
-        <img src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png" alt="icon" onclick="location.href='WRITE'">
-    </button>
+<button class="write-button">
+  <img src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png" alt="icon" onclick="location.href='WRITE?from=suggest'">
+</button>
 
 
-    <script>
+<script>
+  
+  async function SuggestDB() {
+    const { data: { session } } = await client.auth.getSession();
+    const adminEmails = ["SCRET_REMOVED"];
+    const isAdmin = session && adminEmails.includes(session.user.email);
+    const currentUserId = session?.user?.id;
 
-      async function 로그인했냐() {
-        const isLogin = await checkLogin();
+    const { data, error } = await client.from('Suggest').select('*');
+    
+    let tag = "";
+    for (let i = 0; i < data.length; i++) {
+        const isOwner = currentUserId === data[i].user_id;
 
-        if (!isLogin && !location.href.includes('index.html')) {
-          location.href = '/';
-          alert("로그인한 사용자만 이용할 수 있는 페이지입니다.");
-        }
+        tag += `
+        <div class="post-item" style="position: relative; margin: 20px 0; border: 1px solid #ddd; padding: 15px;">
+            <p>${data[i].body}</p>
+            
+            <div class="menu-container" style="position: absolute; top: 10px; right: 10px;">
+                <button onclick="toggleMenu(${i})" style="border:none; background:none; cursor:pointer; font-size:20px;">⋮</button>
+                
+                <div id="menu-${i}" class="dropdown-menu" style="display:none; position: absolute; right: 0; background: white; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); z-index: 10;">
+                    
+                    ${isOwner ? `<button onclick="updateSuggest(${data[i].id})" style="display:block; width:100%; padding: 5px 10px; border:none; background:none; cursor:pointer;">수정</button>` : ''}
 
+                    ${(isOwner || isAdmin) ? `
+                        <button onclick="deleteSuggest(${data[i].id})" style="display:block; width:100%; padding: 5px 10px; border:none; background:none; cursor:pointer; color:red;">삭제</button>
+                    ` : ''}
+
+                </div>
+            </div>
+        </div>`;
     }
+    document.querySelector("#Data").innerHTML = tag;
+}
+    SuggestDB()
 
-    async function SuggestDB() {
-            const { data, error } = await client.from('Suggest').select('*');
+function toggleMenu(index) {
+    const menu = document.querySelector(`#menu-${index}`);
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
 
-            if (error) {
-                console.error('데이터 조회 에러:', error);
-                return;
-            }
+async function deleteSuggest(id) {
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+    
+    const { error } = await client.from('Suggest').delete().eq('id', id);
+    
+    if (error) {
+        alert("삭제 실패: " + error.message);
+    } else {
+        alert("삭제되었습니다.");
+        SuggestDB();
+    }
+}
 
-            let tag = "";
-            for (let i = 0; i < data.length; i++) {
-              tag += `<div style="margin:20px 0">
-                <h2>${data[i].title}</h2>
-                <p>${data[i].body}</p>
-                </div>`;
-            }
-            document.querySelector("#Data").innerHTML = tag;
+async function updateSuggest(id) {
+  location.href = `WRITE?id=${id}&from=suggest`;
+}
+
+window.onclick = function(event) {
+    if (!event.target.matches('button')) {
+        const dropdowns = document.getElementsByClassName("dropdown-menu");
+        for (let i = 0; i < dropdowns.length; i++) {
+            dropdowns[i].style.display = "none";
         }
-
-      SuggestDB();
-    setInterval(로그인했냐, 100);
+    }
+}
 
     </script>
 

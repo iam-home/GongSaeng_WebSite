@@ -73,7 +73,26 @@ function randomStart() {
     window.history.back(); // 로그인 문제있을 때 얘 끄고 콘솔 찍어보셈
 }
 
+client.auth.onAuthStateChange((event, session) => {
+    const currenPath = window.location.pathname;
 
+  if (event === 'SIGNED_IN') {
+    console.log('Login:', session.user.email);
+  }
+  else if (event === 'SIGNED_OUT' && currenPath !== '/') {
+    console.log('Logout');
+    location.href='/';
+    alert("이 페이지는 로그인이 필요합니다!");
+  }
+});
+
+async function isadmin() {
+    const { data: { session } } = await client.auth.getSession();
+    const adminEmails = ["SCRET_REMOVED"];
+    const isAdmin = session && adminEmails.includes(session.user.email);
+    
+    if (isAdmin) document.querySelector("#admin").style.display = "block";
+    }
 
 
 
