@@ -50,15 +50,15 @@
         await loadExistingData(editId);
     }
     
-    if (fromSource === 'todo') document.querySelector("#admin").style.display = "block";
-    if (fromSource === 'timeline') document.querySelector("#admin").style.display = "none";
-    else if (fromSource === 'suggest') document.querySelector("#admin").style.display = "none";
+    if (fromSource === '01_ToDo.html') document.querySelector("#admin").style.display = "block";
+    if (fromSource === '02_TimeLine.html') document.querySelector("#admin").style.display = "none";
+    else if (fromSource === '03_Suggest.html') document.querySelector("#admin").style.display = "none";
 
 });
 
 
 async function loadExistingData(id) {
-    const targetTable = fromSource || 'Suggest';
+    //const targetTable = fromSource || 'Suggest'; // 이게 뭐임?
     const { data, error } = await client.from('Suggest').select('*').eq('id', id).single();
 
     if (data) {
@@ -76,19 +76,19 @@ async function loadExistingData(id) {
     let redirectUrl = "";
     let dataToInsert = {};
 
-    if (fromSource === 'todo') {
+    if (fromSource === '01_ToDo.html') {
         tableName = 'ToDo';
-        redirectUrl = 'ToDo';
+        redirectUrl = '01_ToDo.html';
         dataToInsert = { title: title, body: body };
     } 
-    else if (fromSource === 'timeline') {
+    else if (fromSource === '02_TimeLine.html') {
         tableName = 'TimeLine';
-        redirectUrl = 'TimeLine';
+        redirectUrl = '02_TimeLine.html';
         dataToInsert = { body: body };
     } 
-    else if (fromSource === 'suggest') {
+    else if (fromSource === '03_Suggest.html') {
         tableName = 'Suggest';
-        redirectUrl = 'Suggest';
+        redirectUrl = '03_Suggest.html';
         dataToInsert = { body: body, user_id: session.user.id };
     }
 
