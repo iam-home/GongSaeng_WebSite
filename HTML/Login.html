@@ -22,7 +22,7 @@
         <h4><input type="email" id="signup-id" placeholder="아이디"></h4>
         <h4><input type="password" id="signup-password" placeholder="비밀번호"></h4>
         <h4><input type="password" id="password-confirm" placeholder="비밀번호 재입력"></h4><br>
-        <h4><input type="password" id="register-code" placeholder="동아리 코드"></h4>
+        <h4><input type="password" id="register-code" placeholder="가입 코드"></h4>
         <button id="signup-btn" onclick="signUp()">회원가입</button>
 
     </div>
@@ -54,7 +54,7 @@
     }
 
     if (code !== "SCRET_REMOVED") {
-        alert("잘못된 동아리 코드");
+        alert("잘못된 가입 코드");
         return;
     }
 
@@ -69,7 +69,7 @@
     } else {
         console.log("회원가입 성공:", data);
         if (data.user && data.merged_user === undefined) {
-             alert("회원가입 성공! 이메일 함을 확인하여 인증을 완료해주세요.");
+             alert("회원가입 성공");
         } else {
              alert("회원가입이 완료되었습니다!");
         }

@@ -40,33 +40,34 @@
 
   </div>
 </nav>
-<!-- <div id="Data"></div> -->
+<div id="Data"></div>
+
+  <h2 style="text-align: center;">개발 예정</h2>
+
+
+  <button onclick="img()">button</button>
 
 
 
   <script>
+    
+    function img() {
+      let IMG = `<img src="SECRET_REMOVED/storage/v1/object/public/Data/rhdtod/total.jpg">`;
+      document.querySelector("#Data").innerHTML = IMG;
+    }
 
-    // async function 아직() {
-    //         const { data, error } = await client.from('Data').select('*');
 
-    //         if (error) {
-    //             console.error('데이터 조회 에러:', error);
-    //             return;
-    //         }
+    
+    function 개발예정() {
+      alert("개발 예정입니다");
+      window.history.back();
+    }
 
-    //         let tag = "";
-    //         for (let i = 0; i < data.length; i++) {
-    //           tag += `<div style="margin:20px 0">
-    //             <h2>${data[i].title}</h2>
-    //             <p>${data[i].body}</p>
-    //             </div>`;
-    //         }
-    //         document.querySelector("#Data").innerHTML = tag;
-    //     }
-
-    //   아직();
+개발예정()
 
   </script>
+
+
 
 </body>
 

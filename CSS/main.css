@@ -107,6 +107,16 @@
   display: none;
 }
 
+.post-item {
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.post-item.my-post {
+    background-color: #f8fbff;
+    border: 1px solid #007bff !important;
+}
+
 /* .dark {
   background: #212529;
   color: white;

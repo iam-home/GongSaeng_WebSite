@@ -59,23 +59,25 @@
     
     let tag = "";
     for (let i = 0; i < data.length; i++) {
-        const isOwner = currentUserId === data[i].user_id;
+      const isOwner = currentUserId === data[i].user_id;
+      const myPostClass = isOwner ? "my-post" : "";
 
         tag += `
-        <div class="post-item" style="position: relative; margin: 20px 0; border: 1px solid #ddd; padding: 15px;">
+        <div class="post-item ${myPostClass}" style="position: relative; margin: 20px 0; border: 1px solid #ddd; padding: 15px;">
             <p>${data[i].body}</p>
             
             <div class="menu-container" style="position: absolute; top: 10px; right: 10px;">
-                <button onclick="toggleMenu(${i})" style="border:none; background:none; cursor:pointer; font-size:20px;">⋮</button>
+                <button onclick="toggleMenu(event, ${i})" style="border:none; background:none; cursor:pointer; font-size:20px;">⋮</button>
                 
-                <div id="menu-${i}" class="dropdown-menu" style="display:none; position: absolute; right: 0; background: white; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); z-index: 10;">
+                <div id="menu-${i}" class="dropdown-menu" style="display:none; position: absolute; right: 0; background: white; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); z-index: 10; min-width: 80px;">
                     
-                    ${isOwner ? `<button onclick="updateSuggest(${data[i].id})" style="display:block; width:100%; padding: 5px 10px; border:none; background:none; cursor:pointer;">수정</button>` : ''}
-
-                    ${(isOwner || isAdmin) ? `
-                        <button onclick="deleteSuggest(${data[i].id})" style="display:block; width:100%; padding: 5px 10px; border:none; background:none; cursor:pointer; color:red;">삭제</button>
+                    ${isOwner ? `
+                        <button onclick="updateSuggest(${data[i].id})" style="display:block; width:100%; padding: 8px 10px; border:none; background:none; cursor:pointer; text-align: left;">수정</button>
                     ` : ''}
 
+                    ${(isOwner || isAdmin) ? `
+                        <button onclick="deleteSuggest(${data[i].id})" style="display:block; width:100%; padding: 8px 10px; border:none; background:none; cursor:pointer; color:red; text-align: left;">삭제</button>
+                    ` : ''}
                 </div>
             </div>
         </div>`;
@@ -84,14 +86,20 @@
 }
     SuggestDB()
 
-function toggleMenu(index) {
-    const menu = document.querySelector(`#menu-${index}`);
-    if (menu.style.display === "none") {
-        menu.style.display = "block";
-    } else {
-        menu.style.display = "none";
-    }
-}
+window.toggleMenu = function(event, index) {
+    event.stopPropagation();
+    const menu = document.getElementById(`menu-${index}`);
+    
+    document.querySelectorAll('.dropdown-menu').forEach(m => {
+        if(m !== menu) m.style.display = 'none';
+    });
+    
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+};
+
+document.addEventListener('click', () => {
+    document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
+});
 
 async function deleteSuggest(id) {
     if (!confirm("정말 삭제하시겠습니까?")) return;
@@ -108,15 +116,6 @@ async function deleteSuggest(id) {
 
 async function updateSuggest(id) {
   location.href = `WRITE.html?id=${id}&from=03_Suggest.html`;
-}
-
-window.onclick = function(event) {
-    if (!event.target.matches('button')) {
-        const dropdowns = document.getElementsByClassName("dropdown-menu");
-        for (let i = 0; i < dropdowns.length; i++) {
-            dropdowns[i].style.display = "none";
-        }
-    }
 }
 
     </script>

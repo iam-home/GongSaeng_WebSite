@@ -6,7 +6,7 @@
  * 
  * 서버 수동 켜기 -> node index.js // 쓸 일은 없을듯
  * 
- * cd "C:\School_Programming\_WebSite\WebSite\JS"
+ * cd "C:\School_Programming\_WebSite\WebSite"
  */
 
 // 나중에 재사용 해야되는 코드가 생기거나 뭐 많아지거나 하면 index.js는 그쪽으로 넘겨주고 여기는 server.js로 바꾸셈
