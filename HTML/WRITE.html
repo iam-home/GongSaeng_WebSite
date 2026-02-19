@@ -71,6 +71,11 @@ async function loadExistingData(id) {
     const { data: { session } } = await client.auth.getSession();
     const title = document.querySelector("#admin").value;
     const body = document.querySelector("#bodyValue").value;
+    
+    if (body.trim() === "") {
+        alert("내용을 입력해주세요");
+        return;
+    }
 
     let tableName = "";
     let redirectUrl = "";
@@ -90,6 +95,13 @@ async function loadExistingData(id) {
         tableName = 'Suggest';
         redirectUrl = '03_Suggest.html';
         dataToInsert = { body: body, user_id: session.user.id };
+    }
+    
+    if (fromSource === '01_ToDo.html') {
+        if (title.trim() === "") {
+            alert("제목을 입력해주세요");
+            return;
+        }
     }
 
     if (editId) {
