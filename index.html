@@ -88,7 +88,7 @@
       
       if (isLogin) {
         const { error } = await client.auth.signOut();
-        alert("잘가 or 정말로 로그아웃 하시겠습니까?")
+        alert("로그아웃 하시겠습니까?")
         document.querySelector("#auth-btn").addEventListener("click", signOut);
         location.reload();
       } else {
