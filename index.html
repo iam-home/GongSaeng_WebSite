@@ -1,94 +1,275 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>공생</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="./CSS/main.css">
-    <script src="./JS/Login.js"></script>
-  </head>
-
-  <body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/" font-weight: 900;>공생</a>
-    <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button> -->
-    <!--메뉴 버튼 같은거임. 하고는 싶은데 좀 이상함. 기억 안 나면 주석풀고 창 사이즈 작게 해보셈-->
-
-    <div id="User" class="User">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="./HTML/ToDo.html" style="width: 102px;">동아리 일정</a> <!--할 활동으로 바꿀까. 일정이라는 표현 별로같은데-->
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="./HTML/TimeLine.html" style="width: 86px;">활동 기록</a> <!--타임라인? 어떤 식으로 기록하지-->
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="./HTML/Suggest.html" style="width: 86px;">건의 사항</a> <!--ToDo 앱 만드는 거처럼 글쓰기 / 편집 / 삭제 정도만 구현하면 될듯?-->
-        </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="./HTML/04_Data.html" aria-disabled="true" style="width: 64px;">자료실</a>
-      </ul> -->
-    </div>
-
-    <div class="Login-Button">
-      <!-- <button onclick="checkingLogin()">check login</button> -->
-
-      <button id="auth-btn" onclick="LoginPage()">Login</button>
-    </div>
-
-  </div>
-</nav>
-
-  <!-- 디자인은 진짜 아니다 싶음. 내가 만지면 안될거같음. 어캄? -->
-  <!-- ㅏㅏㅏㅏㅏㅏㅏㅏ귀찮아
-   반편성 진짜 어캄 어케이래 아니 3년 내내 친한 애들 전부 떨구는게말이됨?? 이건 진짜 뭔가있따-->
-
-  <h4 style="margin: 20px;">동아리 소개</h4>
-
-  <!-- <br>
-  <div><a href="FAQ">자주 묻는 질문</a></div> -->
-
-
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>공생</title>
+  <!-- <meta name="description" content="환경과 공학의 만남 - 지속 가능한 미래를 설계하는 동아리" /> -->
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  
+  <script src="./JS/Login.js"></script>
 
   <script>
-    async function checkingLogin(){
-
-      const isLogin = await checkLogin();
-      const authBtn = document.querySelector("#auth-btn");
-
-      if (isLogin){        
-        document.getElementById('User').style.display = 'block';
-        authBtn.innerText = "Logout";
-      }
-      
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Space Mono', 'monospace'],
+          },
+          colors: {
+            bg: '#f5faf6',
+            fg: '#1a2e1f',
+            card: '#ffffff',
+            'card-fg': '#1a2e1f',
+            brand: '#2d7a4f',
+            'brand-fg': '#f5faf6',
+            secondary: '#e8f2eb',
+            'secondary-fg': '#1f3d28',
+            muted: '#6b8f78',
+            accent: '#3aab7a',
+            'accent-fg': '#0e1f15',
+            border: '#d0e2d6',
+            input: '#dbe9e0',
+            ring: '#2d7a4f',
+          },
+        },
+      },
     }
-    
-    async function LoginPage() {
+  </script>
+  <style>
+    body { background-color: #f5faf6; color: #1a2e1f; }
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(26,46,31,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,46,31,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+    .animate-ping { animation: ping 1s cubic-bezier(0,0,0.2,1) infinite; }
+    .hidden-user { display: none !important; }
+  </style>
+</head>
+<body class="font-sans antialiased">
 
+  <header class="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <a href="/index.html" class="flex items-center gap-2">
+        <div class="relative flex items-center justify-center">
+          <svg class="h-6 w-6 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 1 8-1 3.5-3.5 6-7 8.08"/><path d="M5 19a7 7 0 0 1 3.3-12"/></svg>
+          <svg class="absolute -bottom-1 -right-1.5 h-3.5 w-3.5 text-accent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        </div>
+        <span class="font-mono text-lg font-bold tracking-tight text-fg">공생 한글폰트 별론데</span>
+      </a>
+
+      <nav class="hidden items-center gap-1 md:flex">
+        <a href="/index.html" class="rounded-md bg-brand px-3 py-2 text-sm font-medium text-brand-fg">Home</a>
+        <a href="./HTML/faq.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">FAQ</a>
+        
+        <div id="UserNav" class="hidden-user flex items-center gap-1">
+            <a href="./HTML/ToDo.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Schedule</a>
+            <a href="./HTML/TimeLine.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Activities</a>
+            <a href="./HTML/Suggest.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Suggestions</a>
+        </div>
+
+        <button id="auth-btn" onclick="handleAuth()" class="ml-3 rounded-md border border-brand bg-bg px-4 py-2 text-sm font-medium text-brand hover:bg-brand hover:text-brand-fg transition-colors">
+            Login
+        </button>
+      </nav>
+
+      <button id="menuBtn" class="rounded-md p-2 text-fg md:hidden">
+        <svg class="h-5 w-5" id="menuIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        <svg class="h-5 w-5 hidden" id="closeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+
+    <div id="mobileMenu" class="hidden border-t border-border bg-bg px-6 pb-4 md:hidden">
+      <nav class="flex flex-col gap-1 pt-2">
+        <a href="/index.html" class="rounded-md bg-brand px-3 py-2 text-sm font-medium text-brand-fg">Home</a>
+        <a href="./HTML/faq.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">FAQ</a>
+        <div id="MobileUserNav" class="hidden-user flex flex-col gap-1">
+            <a href="./HTML/ToDo.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Schedule</a>
+            <a href="./HTML/TimeLine.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Activities</a>
+            <a href="./HTML/Suggest.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Suggestions</a>
+        </div>
+        <button id="mobile-auth-btn" onclick="handleAuth()" class="mt-2 rounded-md border border-brand bg-bg px-4 py-2 text-center text-sm font-medium text-brand hover:bg-brand hover:text-brand-fg transition-colors">Login</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="min-h-screen">
+    <section class="relative overflow-hidden bg-bg grid-bg">
+      <div class="relative mx-auto max-w-6xl px-6 py-24 md:py-36">
+        <div class="flex flex-col items-center text-center">
+          <div class="flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5">
+            <span class="relative flex h-2 w-2">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-brand"></span>
+            </span>
+            <span class="font-mono text-xs tracking-wider text-muted">2026 SPRING RECRUITING</span>
+          </div>
+          <h1 class="mt-8 max-w-4xl text-4xl font-bold leading-tight tracking-tight text-fg md:text-6xl lg:text-7xl" style="text-wrap:balance">
+            환경을 생각하고<br /><span class="text-brand">공학으로 실현하다</span>
+          </h1>
+          <p class="mt-6 max-w-2xl text-base leading-relaxed text-muted md:text-lg" style="text-wrap:pretty">
+            지속 가능한 기술과 친환경 솔루션을 연구하고 개발하는 동아리입니다. 환경 공학, 재생 에너지, 스마트 시스템을 함께 탐구합니다.
+          </p>
+          
+          <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row">
+            <a href="./HTML/TimeLine.html" class="group flex items-center gap-2 rounded-md bg-brand px-6 py-3 text-sm font-medium text-brand-fg hover:opacity-90 transition-all">
+              활동 보기 // 이거 고쳐야될듯. 가입 전에 뭘 하는지는 알아야되지않나
+              <svg class="h-4 w-4 transition-transform group-hover:translate-x-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="./HTML/Suggest.html" class="flex items-center gap-2 rounded-md border border-border bg-bg px-6 py-3 text-sm font-medium text-fg hover:bg-secondary transition-colors">
+              건의하기 // 얘도 고쳐야될듯. 가입 전에 건의할 수 있는 무언가를 생각해야될거같음
+            </a>
+          </div>
+
+          <div class="mt-16 grid w-full max-w-2xl grid-cols-3 divide-x divide-border rounded-lg border border-border bg-card">
+            <div class="flex flex-col items-center gap-2 py-6">
+              <svg class="h-5 w-5 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 1 8-1 3.5-3.5 6-7 8.08"/><path d="M5 19a7 7 0 0 1 3.3-12"/></svg>
+              <span class="font-mono text-2xl font-bold text-fg">3+</span>
+              <span class="text-xs text-muted">환경 프로젝트</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 py-6">
+              <svg class="h-5 w-5 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+              <span class="font-mono text-2xl font-bold text-fg">5+</span>
+              <span class="text-xs text-muted">공학 워크숍</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 py-6">
+              <svg class="h-5 w-5 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+              <span class="font-mono text-2xl font-bold text-fg">30+</span>
+              <span class="text-xs text-muted">활동 멤버</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t border-border bg-card py-20 md:py-28">
+      <div class="mx-auto max-w-6xl px-6">
+        <div class="flex flex-col items-center text-center">
+          <span class="font-mono text-xs font-bold uppercase tracking-widest text-brand">What We Do</span>
+          <h2 class="mt-4 max-w-lg text-3xl font-bold tracking-tight text-card-fg md:text-4xl">우리가 하는 일</h2>
+          <p class="mt-4 max-w-xl text-muted">환경 보호와 공학 기술을 결합하여 실질적인 변화를 만들어갑니다.</p>
+        </div>
+        <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div class="group flex flex-col rounded-lg border border-border bg-bg p-6 transition-all hover:border-brand/30 hover:shadow-sm">
+            <div class="flex h-10 w-10 items-center justify-center rounded-md bg-brand/10">
+              <svg class="h-5 w-5 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 1 8-1 3.5-3.5 6-7 8.08"/><path d="M5 19a7 7 0 0 1 3.3-12"/></svg>
+            </div>
+            <h3 class="mt-4 text-base font-semibold text-fg">환경 모니터링</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted">캠퍼스 및 지역 환경 데이터를 수집하고 분석하여 환경 변화를 추적합니다.</p>
+          </div>
+          <div class="group flex flex-col rounded-lg border border-border bg-bg p-6 transition-all hover:border-brand/30 hover:shadow-sm">
+            <div class="flex h-10 w-10 items-center justify-center rounded-md bg-brand/10">
+              <svg class="h-5 w-5 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/></svg>
+            </div>
+            <h3 class="mt-4 text-base font-semibold text-fg">IoT 센서 시스템</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted">자체 개발한 IoT 센서로 실시간 대기질, 수질, 토양 데이터를 측정합니다.</p>
+          </div>
+          <div class="group flex flex-col rounded-lg border border-border bg-bg p-6 transition-all hover:border-brand/30 hover:shadow-sm">
+            <div class="flex h-10 w-10 items-center justify-center rounded-md bg-brand/10">
+              <svg class="h-5 w-5 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14 16-3 3 3 3"/><path d="m17 15 3-3-3-3"/></svg>
+            </div>
+            <h3 class="mt-4 text-base font-semibold text-fg">자원 순환 연구</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted">폐기물 재활용과 업사이클링 프로젝트를 통해 자원 순환 체계를 구축합니다.</p>
+          </div>
+          </div>
+      </div>
+    </section>
+
+    <section class="border-t border-border bg-bg py-20 md:py-28">
+      <div class="mx-auto max-w-6xl px-6">
+        <div class="relative overflow-hidden rounded-xl border border-border bg-brand p-10 md:p-16" style="background-image: radial-gradient(circle, rgba(245,250,246,0.1) 1px, transparent 1px); background-size: 30px 30px;">
+          <div class="relative flex flex-col items-center text-center">
+            <h2 class="max-w-lg text-2xl font-bold text-brand-fg md:text-4xl">함께 만드는 지속 가능한 미래</h2>
+            <p class="mt-4 max-w-md text-sm text-brand-fg/80 md:text-base">환경과 공학에 관심 있는 누구든 환영합니다. 지금 바로 합류하세요.</p>
+            <button onclick="handleAuth()" class="group mt-8 flex items-center gap-2 rounded-md bg-brand-fg px-6 py-3 text-sm font-medium text-brand hover:opacity-90 transition-all">
+              시작하기 // 여기서 지원서 받으면 안되나
+              <svg class="h-4 w-4 transition-transform group-hover:translate-x-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-border bg-secondary">
+    <div class="mx-auto max-w-6xl px-6 py-12">
+      <div class="grid gap-8 md:grid-cols-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-base font-bold text-fg">공생 여기도 폰트 별로야</span>
+          </div>
+          <p class="mt-3 text-sm leading-relaxed text-muted">환경과 공학의 만남.<br />지속 가능한 미래를 설계합니다.</p>
+        </div>
+        <div>
+          <h4 class="font-mono text-xs font-bold uppercase tracking-widest text-muted">Navigation</h4>
+          <nav class="mt-3 flex flex-col gap-2">
+            <a href="/index.html" class="text-sm text-muted hover:text-fg">Home</a>
+            <a href="./HTML/faq.html" class="text-sm text-muted hover:text-fg">FAQ</a>
+            <a href="./HTML/ToDo.html" class="text-sm text-muted hover:text-fg">Schedule // 얘들도 로그인 안 하면 안보이게?</a>
+            <a href="./HTML/TimeLine.html" class="text-sm text-muted hover:text-fg">Activities</a>
+            <a href="./HTML/Suggest.html" class="text-sm text-muted hover:text-fg">Suggestions</a>
+          </nav>
+        </div>
+        <div>
+          <h4 class="font-mono text-xs font-bold uppercase tracking-widest text-muted">Contact</h4>
+          <div class="mt-3 flex flex-col gap-2 text-sm text-muted">
+            <span>ecomech@university.ac.kr</span>
+            <span>Instagram: @ecomech_club</span>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 border-t border-border pt-6 text-center">
+        <p class="font-mono text-xs text-muted">&copy; 2026 EcoMech. All rights reserved. 이거 잊지말고 바꾸셈</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    async function init() {
       const isLogin = await checkLogin();
-      
+      const authBtn = document.getElementById("auth-btn");
+      const mobileAuthBtn = document.getElementById("mobile-auth-btn");
+      const userNav = document.getElementById("UserNav");
+      const mobileUserNav = document.getElementById("MobileUserNav");
+
       if (isLogin) {
-        const { error } = await client.auth.signOut();
-        alert("로그아웃 하시겠습니까?")
-        document.querySelector("#auth-btn").addEventListener("click", signOut);
-        location.reload();
+        authBtn.innerText = "Logout";
+        mobileAuthBtn.innerText = "Logout";
+        userNav.classList.remove("hidden-user");
+        mobileUserNav.classList.remove("hidden-user");
+      }
+    }
+
+    async function handleAuth() {
+      const isLogin = await checkLogin();
+      if (isLogin) {
+        if (confirm("로그아웃 하시겠습니까?")) {
+          await client.auth.signOut();
+          location.reload();
+        }
       } else {
         location.href = './HTML/Login.html';
       }
-      
     }
-  document.addEventListener("DOMContentLoaded", async () => {
-    await checkingLogin();
-});
 
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      document.getElementById('menuIcon').classList.toggle('hidden');
+      document.getElementById('closeIcon').classList.toggle('hidden');
+    });
+
+    document.addEventListener("DOMContentLoaded", init);
   </script>
-
-  </body>
+</body>
 </html>

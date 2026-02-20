@@ -1,83 +1,195 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <title>공생</title>
-    <script src="../JS/Login.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | 공생</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  
+  <script src="../JS/Login.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['Space Mono', 'monospace'] },
+          colors: {
+            bg: '#f5faf6', fg: '#1a2e1f', card: '#ffffff', 'card-fg': '#1a2e1f',
+            brand: '#2d7a4f', 'brand-fg': '#f5faf6', secondary: '#e8f2eb',
+            'secondary-fg': '#1f3d28', muted: '#6b8f78', accent: '#3aab7a',
+            border: '#d0e2d6', input: '#dbe9e0', ring: '#2d7a4f',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { background-color: #f5faf6; color: #1a2e1f; }
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(26,46,31,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,46,31,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    input:focus { outline: none; border-color: #2d7a4f; box-shadow: 0 0 0 2px rgba(45, 122, 79, 0.2); }
+  </style>
 </head>
-<body>
-    
-    <div>
-        <h1>Login</h1>
-        <h4><input type="email" id="ID" placeholder="아아디"></h4>
-        <h4><input type="password" id="password" placeholder="비밀번호"></h4>
-        <h4><input type="button" value="로그인" id="login" onclick="fuckingMessage()"></h4>
-        
-        <!-- <a href="WhenForgotPassword">forgot your Password?</a> -->
-        <!-- 아마도 개발 예정. 지금 비번 찾기 페이지 없음. 필요하면 만드셈 -->
+<body class="font-sans antialiased">
 
-        <h1>Create Account</h1>
-        <h4><input type="email" id="signup-id" placeholder="아이디"></h4>
-        <h4><input type="password" id="signup-password" placeholder="비밀번호"></h4>
-        <h4><input type="password" id="password-confirm" placeholder="비밀번호 재입력"></h4><br>
-        <h4><input type="password" id="register-code" placeholder="가입 코드"></h4>
-        <button id="signup-btn" onclick="signUp()">회원가입</button>
-
+  <header class="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <a href="../index.html" class="flex items-center gap-2">
+        <div class="relative flex items-center justify-center">
+          <svg class="h-6 w-6 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 1 8-1 3.5-3.5 6-7 8.08"/><path d="M5 19a7 7 0 0 1 3.3-12"/></svg>
+        </div>
+        <span class="font-mono text-lg font-bold tracking-tight text-fg">공생</span>
+      </a>
     </div>
+  </header>
 
-    <script>
+  <main class="min-h-screen">
+    <section class="relative grid-bg bg-bg py-16 md:py-24">
+      <div class="mx-auto max-w-md px-6">
+        <div class="flex flex-col items-center text-center">
+          <h1 class="text-2xl font-bold tracking-tight text-fg md:text-3xl">공생 Portal // 별로다</h1>
+          <p class="mt-2 text-sm text-muted">지속 가능한 미래를 위한 첫 걸음</p>
+        </div>
 
-        async function fuckingMessage() {
-            const isLogin = await checkLogin();
-            if (isLogin) {
-                randomStart();
-            }
-        }
+        <div class="mt-10 flex rounded-lg border border-border bg-secondary p-1">
+          <button id="loginTab" onclick="switchTab('login')" class="flex-1 rounded-md bg-card px-4 py-2 text-sm font-medium text-card-fg shadow-sm transition-colors">로그인</button>
+          <button id="registerTab" onclick="switchTab('register')" class="flex-1 rounded-md px-4 py-2 text-sm font-medium text-muted transition-colors">회원가입</button>
+        </div>
 
-    async function signUp() {
-    const id = document.querySelector("#signup-id").value.trim();
-    const email = `${id}@gmail.com`;
-    const password = document.querySelector("#signup-password").value;
-    const confirm = document.querySelector("#password-confirm").value;
-    const code = document.querySelector("#register-code").value;
+        <div id="loginSection" class="mt-6 rounded-lg border border-border bg-card p-6 md:p-8">
+          <div class="mb-5">
+            <label class="mb-2 block text-sm font-medium text-card-fg">아이디</label>
+            <input type="text" id="loginId" placeholder="아이디를 입력하세요" class="w-full rounded-md border border-border bg-bg px-4 py-2.5 text-sm text-fg transition-colors" />
+          </div>
+          <div class="mb-5">
+            <label class="mb-2 block text-sm font-medium text-card-fg">비밀번호</label>
+            <input type="password" id="loginPassword" placeholder="비밀번호를 입력하세요" class="w-full rounded-md border border-border bg-bg px-4 py-2.5 text-sm text-fg transition-colors" />
+          </div>
+          <button onclick="handleLogin()" class="w-full rounded-md bg-brand px-6 py-3 text-sm font-medium text-brand-fg hover:opacity-90 transition-all">
+            로그인
+          </button>
+        </div>
 
-    if (!email || !password) {
+        <div id="registerSection" class="mt-6 hidden rounded-lg border border-border bg-card p-6 md:p-8">
+          <div class="mb-5">
+            <label class="mb-2 block text-sm font-medium text-card-fg">아이디</label>
+            <input type="text" id="regId" placeholder="아이디를 입력하세요" class="w-full rounded-md border border-border bg-bg px-4 py-2.5 text-sm text-fg transition-colors" />
+          </div>
+          <div class="mb-5">
+            <label class="mb-2 block text-sm font-medium text-card-fg">비밀번호</label>
+            <input type="password" id="regPassword" placeholder="6자 이상 권장" class="w-full rounded-md border border-border bg-bg px-4 py-2.5 text-sm text-fg transition-colors" />
+          </div>
+          <div class="mb-5">
+            <label class="mb-2 block text-sm font-medium text-card-fg">비밀번호 확인</label>
+            <input type="password" id="regPasswordConfirm" placeholder="다시 한번 입력하세요" class="w-full rounded-md border border-border bg-bg px-4 py-2.5 text-sm text-fg transition-colors" />
+          </div>
+          <div class="mb-6">
+            <label class="mb-2 block text-sm font-medium text-card-fg">가입 코드</label>
+            <input type="password" id="regCode" placeholder="가입 코드를 입력하세요" class="w-full rounded-md border border-border bg-bg px-4 py-2.5 text-sm text-fg transition-colors" />
+          </div>
+          <button onclick="handleSignUp()" class="w-full rounded-md bg-brand px-6 py-3 text-sm font-medium text-brand-fg hover:opacity-90 transition-all">
+            가입하기
+          </button>
+        </div>
+
+        <div class="mt-8 rounded-lg border border-border bg-secondary p-5 text-center">
+            문의: <span class="font-medium text-brand">ecomech@university.ac.kr</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+
+    function switchTab(tab) {
+      const loginSec = document.getElementById('loginSection');
+      const regSec = document.getElementById('registerSection');
+      const lTab = document.getElementById('loginTab');
+      const rTab = document.getElementById('registerTab');
+
+      if (tab === 'login') {
+        loginSec.classList.remove('hidden');
+        regSec.classList.add('hidden');
+        lTab.className = 'flex-1 rounded-md bg-card px-4 py-2 text-sm font-medium text-card-fg shadow-sm transition-colors';
+        rTab.className = 'flex-1 rounded-md px-4 py-2 text-sm font-medium text-muted transition-colors';
+      } else {
+        loginSec.classList.add('hidden');
+        regSec.classList.remove('hidden');
+        rTab.className = 'flex-1 rounded-md bg-card px-4 py-2 text-sm font-medium text-card-fg shadow-sm transition-colors';
+        lTab.className = 'flex-1 rounded-md px-4 py-2 text-sm font-medium text-muted transition-colors';
+      }
+    }
+
+    async function handleLogin() {
+      const id = document.getElementById("loginId").value.trim();
+      const email = `${id}@gmail.com`;
+      const password = document.getElementById("loginPassword").value;
+
+      if (!id || !password) {
         alert("아이디와 비밀번호를 모두 입력해주세요.");
         return;
-    }
+      }
 
-    if (password !== confirm) {
-        alert("비밀번호가 일치하지 않습니다.");
-        return;
-    }
-
-    if (code !== "SCRET_REMOVED") {
-        alert("잘못된 가입 코드");
-        return;
-    }
-
-    const { data, error } = await client.auth.signUp({
+      const { data, error } = await client.auth.signInWithPassword({
         email: email,
         password: password,
-    });
+      });
 
-    if (error) {
+      if (error) {
+        alert("로그인 실패: " + error.message);
+      } else {
+        alert("반갑습니다!");
+        location.href = "../index.html";
+      }
+    }
+
+    async function handleSignUp() {
+      const id = document.getElementById("regId").value.trim();
+      const email = `${id}@gmail.com`;
+      const password = document.getElementById("regPassword").value;
+      const confirm = document.getElementById("regPasswordConfirm").value;
+      const code = document.getElementById("regCode").value;
+
+      if (!id || !password || !code) {
+        alert("모든 필드를 입력해주세요.");
+        return;
+      }
+
+      if (password !== confirm) {
+        alert("비밀번호가 일치하지 않습니다.");
+        return;
+      }
+
+      if (code !== "SCRET_REMOVED") { // 아니반편성이게맞냐고
+        alert("잘못된 가입 코드입니다.");
+        return;
+      }
+
+      const { data, error } = await client.auth.signUp({
+        email: email,
+        password: password,
+      });
+
+      if (error) {
         console.error("회원가입 에러:", error.message);
         alert("회원가입 실패: " + error.message);
-    } else {
-        console.log("회원가입 성공:", data);
+      } else {
         if (data.user && data.merged_user === undefined) {
-             alert("회원가입 성공");
+          alert("회원가입 성공");
         } else {
-             alert("회원가입이 완료되었습니다!");
+          alert("회원가입이 완료되었습니다!");
         }
         location.href = "../index.html";
+      }
     }
-}
-
-    </script>
-
+  </script>
 </body>
 </html>

@@ -1,136 +1,191 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="../CSS/main.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../JS/Login.js"></script>
-    <title>공생</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schedule | 공생</title>
+  <!-- <meta name="description" content="EcoMech 동아리 일정" /> -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../JS/Login.js"></script> 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['Space Mono', 'monospace'] },
+          colors: {
+            bg: '#f5faf6', fg: '#1a2e1f', card: '#ffffff', 'card-fg': '#1a2e1f',
+            brand: '#2d7a4f', 'brand-fg': '#f5faf6', secondary: '#e8f2eb',
+            'secondary-fg': '#1f3d28', muted: '#6b8f78', accent: '#3aab7a',
+            border: '#d0e2d6', input: '#dbe9e0', ring: '#2d7a4f',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { background-color: #f5faf6; color: #1a2e1f; }
+    .dropdown-menu { display: none; }
+    .dropdown-menu.show { display: block; }
+  </style>
 </head>
+<body class="font-sans antialiased">
 
-<body>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/">공생</a>
-
-    <div id="User">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="ToDo.html" style="width: 113px; font-size: large; font-weight: bold;">동아리 일정</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="TimeLine.html" style="width: 86px;">활동 기록</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="Suggest.html" style="width: 86px;">건의 사항</a>
-        </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="00_Data.html" aria-disabled="true" style="width: 64px;">자료실</a>
-        </li> -->
-      </ul>
+  <header class="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <a href="../index.html" class="flex items-center gap-2">
+        <div class="relative flex items-center justify-center">
+          <svg class="h-6 w-6 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 1 8-1 3.5-3.5 6-7 8.08"/><path d="M5 19a7 7 0 0 1 3.3-12"/></svg>
+        </div>
+        <span class="font-mono text-lg font-bold tracking-tight text-fg">공생</span>
+      </a>
+      <nav class="hidden items-center gap-1 md:flex">
+        <a href="../index.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Home</a>
+        <a href="./faq.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">FAQ</a>
+        <a href="./ToDo.html" class="rounded-md bg-brand px-3 py-2 text-sm font-medium text-brand-fg">Schedule</a>
+        <a href="./TimeLine.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Activities</a>
+        <a href="./Suggest.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Suggestions</a>
+        <button onclick="Logout()" id="authBtn" class="ml-3 rounded-md border border-brand bg-bg px-4 py-2 text-sm font-medium text-brand hover:bg-brand hover:text-brand-fg transition-colors">Logout</button>
+      </nav>
     </div>
+  </header>
 
-    <div class="Login-Button">
-      <button onclick="LoginPage()">Logout</button>
+  <main class="min-h-screen">
+    <section class="bg-bg py-16 md:py-24">
+      <div class="mx-auto max-w-4xl px-6">
+        <div class="flex flex-col items-center text-center">
+          <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-brand/10">
+            <svg class="h-6 w-6 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+          </div>
+          <h1 class="mt-6 text-3xl font-bold tracking-tight text-fg md:text-4xl">동아리 일정</h1>
+          <p class="mt-3 text-muted">데이터베이스에 등록된 최신 일정을 확인하세요.</p>
+          
+          <button id="adminWriteBtn" onclick="location.href='WRITE.html?from=ToDo';" class="mt-6 hidden rounded-full bg-brand px-6 py-2 text-sm font-bold text-white shadow-lg hover:bg-accent transition-all">
+            + 일정 추가하기
+          </button>
+        </div>
+
+        <div id="Data" class="mt-12 space-y-4">
+          <div class="py-20 text-center text-muted">일정을 불러오는 중...</div>
+        </div>
+
+        <div class="mt-8 rounded-lg border border-border bg-secondary p-6 text-center">
+          <p class="text-sm text-secondary-fg">
+            일정은 사정에 따라 변경될 수 있습니다.
+            <a href="./Suggest.html" class="font-medium text-brand underline underline-offset-4">건의사항이 있으시면 알려주세요</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-border bg-secondary py-10">
+    <div class="text-center font-mono text-xs text-muted">
+      &copy; 2026 EcoMech. All rights reserved.
     </div>
+  </footer>
 
-  </div>
-</nav>
-  <div id="Data"></div>
+  <script>
 
-  <button id="admin" onclick="location.href='WRITE.html?from=ToDo';">글쓰기</button>
+    async function initialize() {
+      await checkAuth();
+      await loadToDoDB();
+    }
 
-    <script>
-    
-    async function ToDoDB() {
-    const { data: { session } } = await client.auth.getSession();
-    const adminEmails = ["SCRET_REMOVED"];
-    const isAdmin = session && adminEmails.includes(session.user.email);
-
-    const { data, error } = await client.from('ToDo').select('*');
-
-    if (error) {
-        console.error('데이터 조회 에러:', error);
+    async function checkAuth() {
+      const isLogin = await checkLogin();
+      if (!isLogin) {
+        alert("로그인한 사용자만 이용할 수 있는 페이지입니다.");
+        window.history.back();
         return;
+      }
+
+      const { data: { session } } = await client.auth.getSession();
+      const adminEmails = ["SCRET_REMOVED"];
+      if (session && adminEmails.includes(session.user.email)) {
+        document.getElementById('adminWriteBtn').classList.remove('hidden');
+        window.isAdmin = true;
+      }
     }
 
-    let tag = "";
-    for (let i = 0; i < data.length; i++) {
-        tag += `<div class="post-item" style="position: relative; margin: 20px 0; border: 1px solid #ddd; padding: 15px;">
-          <h2 style="color: blue;">${data[i].title}</h2>  
-          <p>${data[i].body}</p>
-            
-            <div class="menu-container" style="position: absolute; top: 10px; right: 10px;">
-                <button onclick="toggleMenu(${i})" style="border:none; background:none; cursor:pointer; font-size:20px;">⋮</button>
-                
-                <div id="menu-${i}" class="dropdown-menu" style="display:none; position: absolute; right: 0; background: white; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); z-index: 10;">
-                    
+    async function loadToDoDB() {
+      const { data, error } = await client.from('ToDo').select('*').order('id', { ascending: true });
 
-                  
-                    ${(isAdmin) ? `
-                        <button onclick="deleteToDo(${data[i].id})" style="display:block; width:100%; padding: 5px 10px; border:none; background:none; cursor:pointer; color:red;">삭제</button>
-                    ` : ''}
+      if (error) {
+        console.error('데이터 조회 에러:', error);
+        document.querySelector("#Data").innerHTML = `<p class="text-center text-red-500">데이터를 불러오지 못했습니다.</p>`;
+        return;
+      }
 
+      let html = "";
+      if (data.length === 0) {
+        html = `<p class="text-center text-muted py-10">등록된 일정이 없습니다.</p>`;
+      } else {
+        data.forEach((item, index) => {
+          html += `
+            <div class="group relative flex flex-col gap-2 rounded-xl border border-border bg-card p-6 transition-all hover:border-brand/30 hover:shadow-md">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                   <h3 class="text-lg font-bold text-card-fg">${item.title}</h3>
                 </div>
+                <div class="relative">
+                  <button onclick="toggleMenu(${index})" class="p-1 text-muted hover:text-fg">
+                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
+                  </button>
+                  <div id="menu-${index}" class="dropdown-menu absolute right-0 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-20">
+                    <div class="py-1">
+                      ${window.isAdmin ? `
+                        <button onclick="deleteToDo(${item.id})" class="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50">삭제하기</button>
+                      ` : `<p class="block px-4 py-2 text-xs text-muted">권한 없음</p>`}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="text-sm leading-relaxed text-muted">${item.body}</p>
             </div>
-        </div>`;
-    } // ${isAdmin ? `<button onclick="updateToDo()" style="display:block; width:100%; padding: 5px 10px; border:none; background:none; cursor:pointer;">수정</button>` : ''}
-    document.querySelector("#Data").innerHTML = tag;
-}
-
-function toggleMenu(index) {
-    const menu = document.querySelector(`#menu-${index}`);
-    if (menu.style.display === "none") {
-        menu.style.display = "block";
-    } else {
-        menu.style.display = "none";
+          `;
+        });
+      }
+      document.querySelector("#Data").innerHTML = html;
     }
-}
 
-async function deleteToDo(id) {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
-    
-    const { error } = await client.from('ToDo').delete().eq('id', id);
-    
-    if (error) {
+    function toggleMenu(index) {
+      const menus = document.querySelectorAll('.dropdown-menu');
+      menus.forEach((m, i) => {
+        if(i === index) m.classList.toggle('show');
+        else m.classList.remove('show');
+      });
+    }
+
+    async function deleteToDo(id) {
+      if (!confirm("정말 이 일정을 삭제하시겠습니까?")) return;
+      const { error } = await client.from('ToDo').delete().eq('id', id);
+      if (error) {
         alert("삭제 실패: " + error.message);
-    } else {
+      } else {
         alert("삭제되었습니다.");
-        ToDoDB();
+        loadToDoDB();
+      }
     }
-}
 
-window.onclick = function(event) {
-    if (!event.target.matches('button')) {
-        const dropdowns = document.getElementsByClassName("dropdown-menu");
-        for (let i = 0; i < dropdowns.length; i++) {
-            dropdowns[i].style.display = "none";
-        }
+    function Logout() {
+      if(typeof LoginPage === 'function') {
+        LoginPage(); 
+      } else {
+        client.auth.signOut().then(() => { location.href = './Login.html'; });
+      }
     }
-}
 
-  async function 로그인했냐() {
-    const isLogin = await checkLogin();
-
-    if (!isLogin && !location.href.includes('../index.html')) {
-      location.href = '/';
-      alert("로그인한 사용자만 이용할 수 있는 페이지입니다.");
-      return;
+    window.onclick = function(event) {
+      if (!event.target.closest('button')) {
+        document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+      }
     }
-    
-  }
 
-      로그인했냐();
-      ToDoDB();
-      isadmin();
-
-    </script>
-
+    initialize();
+  </script>
 </body>
-
 </html>

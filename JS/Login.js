@@ -5,22 +5,22 @@ const client = supabase.createClient(supabaseUrl, supabaseKey);
 const message = ["안녕하세요", "감사합니다", "반편성이게맞음?", "졸리다"];
 // let 변수 = 0; // 함수에 매개변수 넣고 쓰면 됨.
 
-async function signInWithEmail() {
-    const ID = document.querySelector("#ID").value;
-    const email = `${ID}@gmail.com`; // 한 사람당 계정 하나 할라면 위에서 유저네임 받고, 여기서 뒤에 @gmail.com 붙여서 밑에서 처리하셈
-    const password = document.querySelector("#password").value;
+// async function signInWithEmail() {
+//     const ID = document.querySelector("#ID").value;
+//     const email = `${ID}@gmail.com`; // 한 사람당 계정 하나 할라면 위에서 유저네임 받고, 여기서 뒤에 @gmail.com 붙여서 밑에서 처리하셈
+//     const password = document.querySelector("#password").value;
     
-    const { data, error } = await client.auth.signInWithPassword({
-        email: email,
-        password: password,
-    });
+//     const { data, error } = await client.auth.signInWithPassword({
+//         email: email,
+//         password: password,
+//     });
     
-    if (error) {
-        alert("로그인 실패: " + error.message);
-    } else {
-        randomStart()
-    }
-}
+//     if (error) {
+//         alert("로그인 실패: " + error.message);
+//     } else {
+//         randomStart()
+//     }
+// }
 
 async function signOut() {
     await client.auth.signOut();
@@ -79,7 +79,7 @@ client.auth.onAuthStateChange((event, session) => {
   if (event === 'SIGNED_IN') {
     console.log('Login:', session.user.email);
   }
-  else if (event === 'SIGNED_OUT' && currenPath !== '/') {
+  else if (event === 'SIGNED_OUT' && currenPath !== './index.html') {
     console.log('Logout');
     location.href='/';
     alert("이 페이지는 로그인이 필요합니다!");

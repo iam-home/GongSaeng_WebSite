@@ -1,141 +1,174 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="../CSS/main.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../JS/Login.js"></script>
-    <title>공생</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Write | 공생</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../JS/Login.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['Space Mono', 'monospace'] },
+          colors: {
+            bg: '#f5faf6', fg: '#1a2e1f', card: '#ffffff', 'card-fg': '#1a2e1f',
+            brand: '#2d7a4f', 'brand-fg': '#f5faf6', secondary: '#e8f2eb',
+            'secondary-fg': '#1f3d28', muted: '#6b8f78', accent: '#3aab7a',
+            border: '#d0e2d6', input: '#dbe9e0', ring: '#2d7a4f',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { background-color: #f5faf6; color: #1a2e1f; }
+    textarea { resize: none; overflow: hidden; }
+  </style>
 </head>
-<body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<body class="font-sans antialiased">
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <header class="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
+    <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
+      <button onclick="goBack()" class="group flex items-center gap-2 text-muted hover:text-fg transition-colors">
+        <svg class="h-5 w-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        <span class="text-sm font-medium">취소</span>
+      </button>
 
-    <div class="cancel-button">
-      <button onclick="location.href=`${fromSource}.html`">X</button>
+      <span id="pageTitle" class="font-mono text-sm font-bold tracking-tight text-brand">NEW POST</span>
+
+      <button id="register" onclick="GO()" class="rounded-md bg-brand px-4 py-2 text-sm font-bold text-brand-fg shadow-sm hover:bg-accent transition-colors">
+        등록 완료
+      </button>
     </div>
+  </header>
 
-    <div class="complete-button">
-      <button id="register" onclick="GO()">완료</button>
+  <main class="min-h-screen pt-8 pb-20">
+    <div class="mx-auto max-w-4xl px-6">
+      <div class="rounded-2xl border border-border bg-card p-8 shadow-sm">
+        
+        <div id="titleContainer" class="mb-6 hidden">
+          <label class="mb-2 block font-mono text-xs font-bold uppercase tracking-widest text-muted">Title</label>
+          <input id="admin" type="text" placeholder="일정 제목을 입력하세요" 
+            class="w-full border-b border-border bg-transparent py-3 text-2xl font-bold placeholder:text-muted/40 focus:border-brand focus:outline-none transition-colors" />
+        </div>
+
+        <div>
+          <label class="mb-2 block font-mono text-xs font-bold uppercase tracking-widest text-muted">Content</label>
+          <textarea id="bodyValue" oninput="autoResize(this)" placeholder="지속 가능한 미래를 위한 기록을 남겨보세요..." 
+            class="min-h-[300px] w-full bg-transparent py-3 text-lg leading-relaxed placeholder:text-muted/40 focus:outline-none"></textarea>
+        </div>
+
+      </div>
+
+      <p class="mt-6 text-center text-xs text-muted">
+        공생의 모든 활동 기록은 커뮤니티 가이드라인을 준수해야 합니다.
+      </p>
     </div>
+  </main>
 
-    </nav>
-    
-    <div class="write">
-        <input id="admin" type="text" placeholder="제목을 입력하세요">
-        <textarea name="content-input" id="bodyValue" oninput="autoResize(this)" placeholder="내용을 입력하세요"></textarea>
-    </div>
-
-
-
-    <script>
-        let editId = null;
-        let fromSource = null;
+  <script>
+    let editId = null;
+    let fromSource = null;
 
     function autoResize(textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
+    function goBack() {
+      if (confirm("작성 중인 내용은 저장되지 않습니다. 나가시겠습니까?")) {
+        location.href = `${fromSource}.html`;
+      }
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    editId = urlParams.get('id');
-    fromSource = urlParams.get('from');
+      const urlParams = new URLSearchParams(window.location.search);
+      editId = urlParams.get('id');
+      fromSource = urlParams.get('from') || 'Suggest';
 
-    if (editId) {
+      if (fromSource === 'ToDo') {
+        document.querySelector("#titleContainer").classList.remove('hidden');
+        document.querySelector("#pageTitle").innerText = editId ? "EDIT SCHEDULE" : "NEW SCHEDULE";
+      } else if (fromSource === 'TimeLine') {
+        document.querySelector("#pageTitle").innerText = editId ? "EDIT TIMELINE" : "NEW TIMELINE";
+      } else {
+        document.querySelector("#pageTitle").innerText = editId ? "EDIT SUGGESTION" : "NEW SUGGESTION";
+      }
+
+      if (editId) {
         document.querySelector("#register").innerHTML = "수정 완료";
         await loadExistingData(editId);
-    }
-    
-    if (fromSource === 'ToDo') document.querySelector("#admin").style.display = "block";
-    if (fromSource === 'TimeLine') document.querySelector("#admin").style.display = "none";
-    else if (fromSource === 'Suggest') document.querySelector("#admin").style.display = "none";
+      }
+    });
 
-});
-
-
-async function loadExistingData(id) {
-    const targetTable = fromSource || 'Suggest'; // 수정할 때: 유저가 있던 이전 페이지 or 건의사항 / fromSource랑 DB이름이랑 통일함
-    const { data, error } = await client.from(targetTable).select('*').eq('id', id).single();
-
-    if (data) {
+    async function loadExistingData(id) {
+      const { data, error } = await client.from(fromSource).select('*').eq('id', id).single();
+      if (data) {
+        if (fromSource === 'ToDo') {
+          document.querySelector("#admin").value = data.title;
+        }
         document.querySelector("#bodyValue").value = data.body;
         autoResize(document.querySelector("#bodyValue"));
+      }
     }
-}
 
-    async function GO() { // fuck u
-    const { data: { session } } = await client.auth.getSession();
-    const title = document.querySelector("#admin").value;
-    const body = document.querySelector("#bodyValue").value;
-    
-    if (body.trim() === "") {
-        alert("내용을 입력해주세요");
+    async function GO() {
+      const { data: { session } } = await client.auth.getSession();
+      const title = document.querySelector("#admin").value;
+      const body = document.querySelector("#bodyValue").value;
+      
+      if (body.trim() === "") {
+        alert("내용을 입력해주세요.");
         return;
-    }
+      }
 
-    let tableName = "";
-    let redirectUrl = "";
-    let dataToInsert = {};
+      if (fromSource === 'ToDo' && title.trim() === "") {
+        alert("제목을 입력해주세요.");
+        return;
+      }
 
-    if (fromSource === 'ToDo') {
-        tableName = 'ToDo';
-        redirectUrl = 'ToDo.html';
-        dataToInsert = { title: title, body: body };
-    } 
-    else if (fromSource === 'TimeLine') {
-        tableName = 'TimeLine';
-        redirectUrl = 'TimeLine.html';
-        dataToInsert = { body: body };
-    } 
-    else if (fromSource === 'Suggest') {
-        tableName = 'Suggest';
-        redirectUrl = 'Suggest.html';
-        dataToInsert = { body: body, user_id: session.user.id };
-    }
-    
-    if (fromSource === 'ToDo') {
-        if (title.trim() === "") {
-            alert("제목을 입력해주세요");
-            return;
-        }
-    }
+      let dataToInsert = { body: body };
+      
+      if (fromSource === 'ToDo') {
+        dataToInsert.title = title;
+      } else if (fromSource === 'Suggest') {
+        dataToInsert.user_id = session.user.id;
+      }
 
-    if (editId) {
-        const { error } = await client.from(tableName).update(dataToInsert).eq('id', editId);
+      if (editId) {
+        const { error } = await client.from(fromSource).update(dataToInsert).eq('id', editId);
         if (!error) {
-            alert("수정되었습니다!");
-            location.href = redirectUrl;
-        }
-    } else {
-        const { error } = await client.from(tableName).insert([dataToInsert]);
-        if (!error) {
-            alert("등록되었습니다!");
-            location.href = redirectUrl;
+          alert("수정되었습니다!");
+          location.href = `${fromSource}.html`;
         } else {
-            console.error("에러 발생:", error.message);
-            alert("저장에 실패했습니다.");
+          alert("수정 실패: " + error.message);
         }
+      } else {
+        const { error } = await client.from(fromSource).insert([dataToInsert]);
+        if (!error) {
+          alert("등록되었습니다!");
+          location.href = `${fromSource}.html`;
+        } else {
+          console.error("에러 발생:", error.message);
+          alert("저장에 실패했습니다.");
+        }
+      }
     }
-}
 
-async function 로그인했냐() {
-    const isLogin = await checkLogin();
-
-    if (!isLogin && !location.href.includes('../index.html')) {
-      location.href = '/';
-      alert("로그인한 사용자만 이용할 수 있는 페이지입니다.");
-      return;
+    async function 로그인했냐() {
+      const isLogin = await checkLogin();
+      if (!isLogin && !location.href.includes('../index.html')) {
+        alert("로그인한 사용자만 이용할 수 있는 페이지입니다.");
+        location.href = './Login.html';
+      }
     }
-    
-  }
 
-      로그인했냐();
-
-    </script>
-
+    로그인했냐();
+  </script>
 </body>
 </html>

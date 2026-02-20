@@ -1,138 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="../CSS/main.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../JS/Login.js"></script>
-    <title>공생</title>
-</head>
-
-<body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/">공생</a>
-
-    <div id="User">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="ToDo.html" style="width: 102px;">동아리 일정</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="TimeLine.html" style="width: 86px;">활동 기록</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="Suggest.html" style="width: 95px; font-size: large; font-weight: bold;">건의 사항</a>
-        </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="00_Data.html" aria-disabled="true" style="width: 64px;">자료실</a>
-        </li> -->
-      </ul>
-    </div>
-
-    <div class="Login-Button">
-      <button onclick="LoginPage()">Logout</button>
-    </div>
-
-  </div>
-</nav>
-<div id="Data"></div>
-
-<button class="write-button">
-  <img src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png" alt="icon" onclick="location.href='WRITE.html?from=Suggest'">
-</button>
-
-
-<script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suggestions | 공생</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   
-  async function SuggestDB() {
-    const { data: { session } } = await client.auth.getSession();
-    const adminEmails = ["SCRET_REMOVED"];
-    const isAdmin = session && adminEmails.includes(session.user.email);
-    const currentUserId = session?.user?.id;
+  <script src="../JS/Login.js"></script>
 
-    const { data, error } = await client.from('Suggest').select('*');
-    
-    let tag = "";
-    for (let i = 0; i < data.length; i++) {
-      const isOwner = currentUserId === data[i].user_id;
-      const myPostClass = isOwner ? "my-post" : "";
-
-        tag += `
-        <div class="post-item ${myPostClass}" style="position: relative; margin: 20px 0; border: 1px solid #ddd; padding: 15px;">
-            <p>${data[i].body}</p>
-            
-            <div class="menu-container" style="position: absolute; top: 10px; right: 10px;">
-                <button onclick="toggleMenu(event, ${i})" style="border:none; background:none; cursor:pointer; font-size:20px;">⋮</button>
-                
-                <div id="menu-${i}" class="dropdown-menu" style="display:none; position: absolute; right: 0; background: white; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); z-index: 10; min-width: 80px;">
-                    
-                    ${isOwner ? `
-                        <button onclick="updateSuggest(${data[i].id})" style="display:block; width:100%; padding: 8px 10px; border:none; background:none; cursor:pointer; text-align: left;">수정</button>
-                    ` : ''}
-
-                    ${(isOwner || isAdmin) ? `
-                        <button onclick="deleteSuggest(${data[i].id})" style="display:block; width:100%; padding: 8px 10px; border:none; background:none; cursor:pointer; color:red; text-align: left;">삭제</button>
-                    ` : ''}
-                </div>
-            </div>
-        </div>`;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['Space Mono', 'monospace'] },
+          colors: {
+            bg: '#f5faf6', fg: '#1a2e1f', card: '#ffffff', 'card-fg': '#1a2e1f',
+            brand: '#2d7a4f', 'brand-fg': '#f5faf6', secondary: '#e8f2eb',
+            'secondary-fg': '#1f3d28', muted: '#6b8f78', accent: '#3aab7a',
+            border: '#d0e2d6', input: '#dbe9e0', ring: '#2d7a4f',
+          },
+        },
+      },
     }
-    document.querySelector("#Data").innerHTML = tag;
-}
-    SuggestDB()
-
-window.toggleMenu = function(event, index) {
-    event.stopPropagation();
-    const menu = document.getElementById(`menu-${index}`);
-    
-    document.querySelectorAll('.dropdown-menu').forEach(m => {
-        if(m !== menu) m.style.display = 'none';
-    });
-    
-    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
-};
-
-document.addEventListener('click', () => {
-    document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
-});
-
-async function deleteSuggest(id) {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
-    
-    const { error } = await client.from('Suggest').delete().eq('id', id);
-    
-    if (error) {
-        alert("삭제 실패: " + error.message);
-    } else {
-        alert("삭제되었습니다.");
-        SuggestDB();
+  </script>
+  <style>
+    body { background-color: #f5faf6; color: #1a2e1f; }
+    textarea:focus {
+      outline: none;
+      border-color: #2d7a4f;
+      box-shadow: 0 0 0 2px rgba(45, 122, 79, 0.2);
     }
-}
-
-async function updateSuggest(id) {
-  location.href = `WRITE.html?id=${id}&from=Suggest`;
-}
-
-async function 로그인했냐() {
-    const isLogin = await checkLogin();
-
-    if (!isLogin && !location.href.includes('../index.html')) {
-      location.href = '/';
-      alert("로그인한 사용자만 이용할 수 있는 페이지입니다.");
-      return;
+    .grid-bg {
+      background-image: linear-gradient(rgba(26,46,31,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(26,46,31,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
     }
-    
-  }
+  </style>
+</head>
+<body class="font-sans antialiased">
 
-      로그인했냐();
+  <header class="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <a href="../index.html" class="flex items-center gap-2">
+        <div class="relative flex items-center justify-center text-brand">
+          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 1 8-1 3.5-3.5 6-7 8.08"/><path d="M5 19a7 7 0 0 1 3.3-12"/></svg>
+        </div>
+        <span class="font-mono text-lg font-bold text-fg">공생</span>
+      </a>
+      <nav class="hidden items-center gap-1 md:flex">
+        <a href="../index.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Home</a>
+        <a href="./faq.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">FAQ</a>
+        <a href="./ToDo.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Schedule</a>
+        <a href="./TimeLine.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Activities</a>
+        <a href="./Suggest.html" class="rounded-md bg-brand px-3 py-2 text-sm font-medium text-brand-fg">Suggestions</a>
+      </nav>
+    </div>
+  </header>
 
-    </script>
+  <main class="min-h-screen grid-bg">
+    <section class="py-16 md:py-24">
+      <div class="mx-auto max-w-xl px-6">
+        <div class="text-center">
+          <div class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 mb-6">
+            <svg class="h-6 w-6 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h1 class="text-3xl font-bold tracking-tight text-fg">건의사항</h1>
+          <p class="mt-3 text-muted">동아리 발전을 위한 소중한 의견을 보내주세요.<br>운영진만 안전하게 확인할 수 있습니다.</p>
+        </div>
 
+        <div id="formContainer" class="mt-12 rounded-2xl border border-border bg-card p-6 shadow-sm md:p-10 transition-all">
+          <div class="mb-6">
+            <label for="content" class="mb-3 block text-sm font-semibold text-fg">건의 내용</label>
+            <textarea id="content" rows="8" placeholder="이곳에 내용을 입력하세요. 익명성이 보장됩니다." class="w-full resize-none rounded-xl border border-border bg-bg px-5 py-4 text-sm text-fg placeholder:text-muted/50 transition-all"></textarea>
+          </div>
+
+          <button onclick="submitSuggestion()" id="submitBtn" class="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-6 py-4 text-sm font-bold text-brand-fg hover:bg-brand/90 transition-all active:scale-[0.98]">
+            <span>비공개로 보내기</span>
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+
+        <div id="successMsg" class="mt-12 hidden text-center animate-in fade-in duration-500">
+          <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-brand/10 text-brand">
+            <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h3 class="mt-6 text-xl font-bold text-fg">전송 완료!</h3>
+          <p class="mt-2 text-muted">보내주신 소중한 의견은 운영진이 신중히 검토하겠습니다.</p>
+          <button onclick="location.reload()" class="mt-8 text-sm font-medium text-brand hover:underline">추가로 작성하기</button>
+        </div>
+
+        <div class="mt-10 rounded-xl bg-secondary/50 border border-brand/10 p-5">
+          <div class="flex gap-3">
+            <svg class="h-5 w-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p class="text-xs leading-relaxed text-secondary-fg/80">
+              작성된 건의사항은 <strong>데이터베이스에 안전하게 보관</strong>되며, 다른 회원들에게 노출되지 않습니다. 개인적인 문제나 빠른 답변이 필요한 경우 과대표 혹은 회장에게 직접 연락 바랍니다. // 이거도 좀 고치고 싶은데
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+
+    async function checkAuth() {
+      const isLogin = await checkLogin();
+      if (!isLogin) {
+        alert("로그인한 사용자만 건의사항을 작성할 수 있습니다.");
+        window.history.back();
+      }
+    }
+    checkAuth();
+
+    async function submitSuggestion() {
+      const content = document.getElementById('content').value.trim();
+      const btn = document.getElementById('submitBtn');
+
+      if (!content) {
+        alert("내용을 입력해주세요.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = "전송 중...";
+
+      try {
+        const { data: { session } } = await client.auth.getSession();
+        
+        const { error } = await client
+          .from('Suggest')
+          .insert([
+            { 
+              body: content, 
+              user_id: session?.user?.id 
+            }
+          ]);
+
+        if (error) throw error;
+
+        document.getElementById('formContainer').classList.add('hidden');
+        document.getElementById('successMsg').classList.remove('hidden');
+
+      } catch (err) {
+        console.error("전송 에러:", err);
+        alert("전송에 실패했습니다: " + err.message);
+        btn.disabled = false;
+        btn.innerHTML = "비공개로 보내기";
+      }
+    }
+  </script>
 </body>
-
 </html>

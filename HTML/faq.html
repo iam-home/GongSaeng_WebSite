@@ -1,27 +1,230 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!--부트스트랩-->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../JS/Login.js"></script>
-  <title>공생</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ | 공생</title>
+  <!-- <meta name="description" content="자주 묻는 질문" /> -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['Space Mono', 'monospace'] },
+          colors: {
+            bg: '#f5faf6', fg: '#1a2e1f', card: '#ffffff', 'card-fg': '#1a2e1f',
+            brand: '#2d7a4f', 'brand-fg': '#f5faf6', secondary: '#e8f2eb',
+            'secondary-fg': '#1f3d28', muted: '#6b8f78', accent: '#3aab7a',
+            border: '#d0e2d6', input: '#dbe9e0', ring: '#2d7a4f',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { background-color: #f5faf6; color: #1a2e1f; }
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s ease-out; }
+    .accordion-content.open { max-height: 300px; }
+    .accordion-chevron { transition: transform 0.3s ease; }
+    .accordion-chevron.open { transform: rotate(180deg); }
+  </style>
 </head>
-<body>
+<body class="font-sans antialiased">
 
-  <h2>faq</h2>
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <a href="../index.html" class="flex items-center gap-2">
+        <div class="relative flex items-center justify-center">
+          <svg class="h-6 w-6 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 1 8-1 3.5-3.5 6-7 8.08"/><path d="M5 19a7 7 0 0 1 3.3-12"/></svg>
+          <svg class="absolute -bottom-1 -right-1.5 h-3.5 w-3.5 text-accent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        </div>
+        <span class="font-mono text-lg font-bold tracking-tight text-fg">공생</span>
+      </a>
+      <nav class="hidden items-center gap-1 md:flex">
+        <a href="../index.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Home</a>
+        <a href="./faq.html" class="rounded-md bg-brand px-3 py-2 text-sm font-medium text-brand-fg">FAQ</a>
+        <a href="./ToDo.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Schedule // 로그인 안 해도 보임. 고치셈</a>
+        <a href="./TimeLine.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Activities</a>
+        <a href="./Suggest.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Suggestions</a>
+        <a href="./Login.html" class="ml-3 rounded-md border border-brand bg-bg px-4 py-2 text-sm font-medium text-brand hover:bg-brand hover:text-brand-fg transition-colors">Login</a>
+      </nav>
+      <button id="menuBtn" class="rounded-md p-2 text-fg md:hidden" aria-label="Toggle menu">
+        <svg class="h-5 w-5" id="menuIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        <svg class="h-5 w-5 hidden" id="closeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div id="mobileMenu" class="hidden border-t border-border bg-bg px-6 pb-4 md:hidden">
+      <nav class="flex flex-col gap-1 pt-2">
+        <a href="../index.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Home</a>
+        <a href="./faq.html" class="rounded-md bg-brand px-3 py-2 text-sm font-medium text-brand-fg">FAQ</a>
+        <a href="./ToDo.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Schedule</a>
+        <a href="./TimeLine.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Activities</a>
+        <a href="./Suggest.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Suggestions</a>
+        <a href="./Login.html" class="mt-2 rounded-md border border-brand bg-bg px-4 py-2 text-center text-sm font-medium text-brand hover:bg-brand hover:text-brand-fg transition-colors">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="min-h-screen">
+    <section class="bg-bg py-16 md:py-24">
+      <div class="mx-auto max-w-3xl px-6">
+        <!-- Header -->
+        <div class="flex flex-col items-center text-center">
+          <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-brand/10">
+            <svg class="h-6 w-6 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+          </div>
+          <h1 class="mt-6 text-3xl font-bold tracking-tight text-fg md:text-4xl">자주 묻는 질문</h1>
+          <p class="mt-3 text-muted">궁금한 점이 있으시면 아래에서 확인해보세요.</p>
+        </div>
+
+        <!-- Accordion -->
+        <div class="mt-12 rounded-lg border border-border bg-card p-6" id="faqAccordion">
+          <div class="divide-y divide-border">
+            <div class="accordion-item">
+              <button class="accordion-trigger flex w-full items-center justify-between py-4 text-left text-sm font-medium text-card-fg hover:text-brand transition-colors">
+                <span>동아리에 가입하려면 어떤 조건이 필요한가요?</span>
+                <svg class="accordion-chevron h-4 w-4 shrink-0 text-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="accordion-content text-sm leading-relaxed text-muted">
+                <div class="pb-4">환경이나 공학에 관심이 있는 학생이라면 전공에 관계없이 누구나 가입할 수 있습니다. 별도의 선행 지식은 필요하지 않으며, 활동하면서 함께 배워나갑니다.</div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger flex w-full items-center justify-between py-4 text-left text-sm font-medium text-card-fg hover:text-brand transition-colors">
+                <span>동아리 활동 시간은 어떻게 되나요?</span>
+                <svg class="accordion-chevron h-4 w-4 shrink-0 text-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="accordion-content text-sm leading-relaxed text-muted">
+                <div class="pb-4">정기 모임은 매주 수요일 오후 6시에 진행됩니다. 프로젝트 팀별 미팅은 팀원들과 자유롭게 조율하여 추가로 진행합니다.</div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger flex w-full items-center justify-between py-4 text-left text-sm font-medium text-card-fg hover:text-brand transition-colors">
+                <span>동아리비가 있나요?</span>
+                <svg class="accordion-chevron h-4 w-4 shrink-0 text-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="accordion-content text-sm leading-relaxed text-muted">
+                <div class="pb-4">학기당 소정의 동아리비가 있으며, 재료비와 장비 유지비 등에 사용됩니다. 정확한 금액은 매 학기 초 공지됩니다.</div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger flex w-full items-center justify-between py-4 text-left text-sm font-medium text-card-fg hover:text-brand transition-colors">
+                <span>비이공계 학생도 참여할 수 있나요?</span>
+                <svg class="accordion-chevron h-4 w-4 shrink-0 text-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="accordion-content text-sm leading-relaxed text-muted">
+                <div class="pb-4">물론입니다! 디자인, 기획, 홍보 등 다양한 역할이 있어 문과 학생도 충분히 기여할 수 있습니다. 팀 프로젝트에서 다양한 관점이 중요합니다.</div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger flex w-full items-center justify-between py-4 text-left text-sm font-medium text-card-fg hover:text-brand transition-colors">
+                <span>어떤 프로젝트를 진행하나요?</span>
+                <svg class="accordion-chevron h-4 w-4 shrink-0 text-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="accordion-content text-sm leading-relaxed text-muted">
+                <div class="pb-4">IoT 기반 환경 모니터링 시스템, 소규모 태양광 발전, 캠퍼스 탄소 발자국 분석, 업사이클링 제품 제작 등 다양한 프로젝트를 진행합니다.</div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger flex w-full items-center justify-between py-4 text-left text-sm font-medium text-card-fg hover:text-brand transition-colors">
+                <span>장비나 소프트웨어는 지원되나요?</span>
+                <svg class="accordion-chevron h-4 w-4 shrink-0 text-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="accordion-content text-sm leading-relaxed text-muted">
+                <div class="pb-4">아두이노, 라즈베리파이, 3D 프린터 등 기본 장비를 동아리에서 보유하고 있으며, 필요한 소프트웨어 라이선스도 지원됩니다.</div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger flex w-full items-center justify-between py-4 text-left text-sm font-medium text-card-fg hover:text-brand transition-colors">
+                <span>대외 활동이나 대회 참가 기회가 있나요?</span>
+                <svg class="accordion-chevron h-4 w-4 shrink-0 text-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="accordion-content text-sm leading-relaxed text-muted">
+                <div class="pb-4">환경 공학 관련 경진대회, 해커톤, 학술 발표회 등에 매년 참가하고 있으며, 다수의 수상 실적을 보유하고 있습니다.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="mt-8 rounded-lg border border-border bg-secondary p-6 text-center">
+          <p class="text-sm text-secondary-fg">
+            찾으시는 답변이 없나요?
+            <a href="mailto:ecomech@university.ac.kr" class="font-medium text-brand underline underline-offset-4">직접 문의하기 // 이게 뭐임??</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-border bg-secondary">
+    <div class="mx-auto max-w-6xl px-6 py-12">
+      <div class="grid gap-8 md:grid-cols-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <div class="relative flex items-center justify-center">
+              <svg class="h-5 w-5 text-brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 1 8-1 3.5-3.5 6-7 8.08"/><path d="M5 19a7 7 0 0 1 3.3-12"/></svg>
+              <svg class="absolute -bottom-1 -right-1.5 h-3 w-3 text-accent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+            </div>
+            <span class="font-mono text-base font-bold text-fg">공생</span>
+          </div>
+          <p class="mt-3 text-sm leading-relaxed text-muted">환경과 공학의 만남.<br />지속 가능한 미래를 설계합니다.</p>
+        </div>
+        <div>
+          <h4 class="font-mono text-xs font-bold uppercase tracking-widest text-muted">Navigation</h4>
+          <nav class="mt-3 flex flex-col gap-2">
+            <a href="../index.html" class="text-sm text-muted hover:text-fg transition-colors">Home</a>
+            <a href="./faq.html" class="text-sm text-muted hover:text-fg transition-colors">FAQ</a>
+            <a href="./ToDo.html" class="text-sm text-muted hover:text-fg transition-colors">Schedule</a>
+            <a href="./TimeLine.html" class="text-sm text-muted hover:text-fg transition-colors">Activities</a>
+            <a href="./Suggest.html" class="text-sm text-muted hover:text-fg transition-colors">Suggestions</a>
+          </nav>
+        </div>
+        <div>
+          <h4 class="font-mono text-xs font-bold uppercase tracking-widest text-muted">Contact</h4>
+          <div class="mt-3 flex flex-col gap-2 text-sm text-muted">
+            <span>ecomech@university.ac.kr</span>
+            <span>Instagram: @ecomech_club</span>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 border-t border-border pt-6 text-center">
+        <p class="font-mono text-xs text-muted">&copy; 2026 EcoMech. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
 
   <script>
 
-    function 개발예정() {
-      alert("개발예정임.");
-      alert("귀찮으니까 알아서 나가셈");
-      return;
-    }
-    개발예정();
-    
-  </script>
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+    const closeIcon = document.getElementById('closeIcon');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      menuIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    });
 
+    document.querySelectorAll('.accordion-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const content = trigger.nextElementSibling;
+        const chevron = trigger.querySelector('.accordion-chevron');
+        const isOpen = content.classList.contains('open');
+
+        document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('open'));
+        document.querySelectorAll('.accordion-chevron').forEach(c => c.classList.remove('open'));
+        if (!isOpen) {
+          content.classList.add('open');
+          chevron.classList.add('open');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
