@@ -15,7 +15,7 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
 
     <div class="cancel-button">
-      <button onclick="location.href=fromSource">X</button>
+      <button onclick="location.href=`${fromSource}.html`">X</button>
     </div>
 
     <div class="complete-button">
@@ -50,16 +50,16 @@
         await loadExistingData(editId);
     }
     
-    if (fromSource === '01_ToDo.html') document.querySelector("#admin").style.display = "block";
-    if (fromSource === '02_TimeLine.html') document.querySelector("#admin").style.display = "none";
-    else if (fromSource === '03_Suggest.html') document.querySelector("#admin").style.display = "none";
+    if (fromSource === 'ToDo') document.querySelector("#admin").style.display = "block";
+    if (fromSource === 'TimeLine') document.querySelector("#admin").style.display = "none";
+    else if (fromSource === 'Suggest') document.querySelector("#admin").style.display = "none";
 
 });
 
 
 async function loadExistingData(id) {
-    //const targetTable = fromSource || 'Suggest'; // 이게 뭐임?
-    const { data, error } = await client.from('Suggest').select('*').eq('id', id).single();
+    const targetTable = fromSource || 'Suggest'; // 수정할 때: 유저가 있던 이전 페이지 or 건의사항 / fromSource랑 DB이름이랑 통일함
+    const { data, error } = await client.from(targetTable).select('*').eq('id', id).single();
 
     if (data) {
         document.querySelector("#bodyValue").value = data.body;
@@ -67,7 +67,7 @@ async function loadExistingData(id) {
     }
 }
 
-    async function GO() {
+    async function GO() { // fuck u
     const { data: { session } } = await client.auth.getSession();
     const title = document.querySelector("#admin").value;
     const body = document.querySelector("#bodyValue").value;
@@ -81,23 +81,23 @@ async function loadExistingData(id) {
     let redirectUrl = "";
     let dataToInsert = {};
 
-    if (fromSource === '01_ToDo.html') {
+    if (fromSource === 'ToDo') {
         tableName = 'ToDo';
-        redirectUrl = '01_ToDo.html';
+        redirectUrl = 'ToDo.html';
         dataToInsert = { title: title, body: body };
     } 
-    else if (fromSource === '02_TimeLine.html') {
+    else if (fromSource === 'TimeLine') {
         tableName = 'TimeLine';
-        redirectUrl = '02_TimeLine.html';
+        redirectUrl = 'TimeLine.html';
         dataToInsert = { body: body };
     } 
-    else if (fromSource === '03_Suggest.html') {
+    else if (fromSource === 'Suggest') {
         tableName = 'Suggest';
-        redirectUrl = '03_Suggest.html';
+        redirectUrl = 'Suggest.html';
         dataToInsert = { body: body, user_id: session.user.id };
     }
     
-    if (fromSource === '01_ToDo.html') {
+    if (fromSource === 'ToDo') {
         if (title.trim() === "") {
             alert("제목을 입력해주세요");
             return;
@@ -121,6 +121,19 @@ async function loadExistingData(id) {
         }
     }
 }
+
+async function 로그인했냐() {
+    const isLogin = await checkLogin();
+
+    if (!isLogin && !location.href.includes('../index.html')) {
+      location.href = '/';
+      alert("로그인한 사용자만 이용할 수 있는 페이지입니다.");
+      return;
+    }
+    
+  }
+
+      로그인했냐();
 
     </script>
 

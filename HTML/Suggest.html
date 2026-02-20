@@ -20,17 +20,17 @@
     <div id="User">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="01_ToDo.html" style="width: 102px;">동아리 일정</a>
+          <a class="nav-link active" aria-current="page" href="ToDo.html" style="width: 102px;">동아리 일정</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="02_TimeLine.html" style="width: 86px;">활동 기록</a>
+          <a class="nav-link" href="TimeLine.html" style="width: 86px;">활동 기록</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="03_Suggest.html" style="width: 95px; font-size: large; font-weight: bold;">건의 사항</a>
+          <a class="nav-link" href="Suggest.html" style="width: 95px; font-size: large; font-weight: bold;">건의 사항</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="04_Data.html" aria-disabled="true" style="width: 64px;">자료실</a>
-        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="00_Data.html" aria-disabled="true" style="width: 64px;">자료실</a>
+        </li> -->
       </ul>
     </div>
 
@@ -43,7 +43,7 @@
 <div id="Data"></div>
 
 <button class="write-button">
-  <img src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png" alt="icon" onclick="location.href='WRITE.html?from=03_Suggest.html'">
+  <img src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png" alt="icon" onclick="location.href='WRITE.html?from=Suggest'">
 </button>
 
 
@@ -115,8 +115,21 @@ async function deleteSuggest(id) {
 }
 
 async function updateSuggest(id) {
-  location.href = `WRITE.html?id=${id}&from=03_Suggest.html`;
+  location.href = `WRITE.html?id=${id}&from=Suggest`;
 }
+
+async function 로그인했냐() {
+    const isLogin = await checkLogin();
+
+    if (!isLogin && !location.href.includes('../index.html')) {
+      location.href = '/';
+      alert("로그인한 사용자만 이용할 수 있는 페이지입니다.");
+      return;
+    }
+    
+  }
+
+      로그인했냐();
 
     </script>
 

@@ -1,15 +1,16 @@
 /**
  * npm install -g nodemon -> nodemon 글로벌하게 설치
  * 
- * 터미널에 nodemon index.js ㄱㄱ -> 서버 자동 재실행
+ * 터미널에 nodemon index.js -> 서버 자동 재실행
  * 서버 닫기 -> Ctrl + C
  * 
  * 서버 수동 켜기 -> node index.js // 쓸 일은 없을듯
  * 
  * cd "C:\School_Programming\_WebSite\WebSite"
+ * 
+ * netlify로 올리면서 여기는 안 쓰는건가
  */
 
-// 나중에 재사용 해야되는 코드가 생기거나 뭐 많아지거나 하면 index.js는 그쪽으로 넘겨주고 여기는 server.js로 바꾸셈
 const express = require('express');
 const app = express();
 
@@ -25,40 +26,35 @@ app.use('/CSS', express.static(path.join(__dirname, '..', 'CSS')));
 
 
 app.get('/', function(req, res){
-    res.sendFile(path.join(__dirname, '..', 'HTML', 'index.html'));
+    res.sendFile(path.join(__dirname, '.', 'HTML', 'index.html'));
 });
 
 app.get('/Login', function(req, res){
-    res.sendFile(path.join(__dirname, '..', 'HTML', 'Login.html'));
+    res.sendFile(path.join(__dirname, '.', 'HTML', 'Login.html'));
 });
 
 app.get('/ToDo', function(req, res){
-    res.sendFile(path.join(__dirname, '..', 'HTML', '01_ToDo.html'));
+    res.sendFile(path.join(__dirname, '.', 'HTML', './ToDo.html'));
 });
 
 app.get('/TimeLine', function(req, res){
-    res.sendFile(path.join(__dirname, '..', 'HTML', '02_TImeLine.html'));
+    res.sendFile(path.join(__dirname, '.', 'HTML', './TimeLine.html'));
 });
 
 app.get('/Suggest', function(req, res){
-    res.sendFile(path.join(__dirname, '..', 'HTML', '03_Suggest.html'));
+    res.sendFile(path.join(__dirname, '.', 'HTML', './Suggest.html'));
 });
 
 app.get('/Data', function(req, res){
-    res.sendFile(path.join(__dirname, '..', 'HTML', '04_Data.html'));
+    res.sendFile(path.join(__dirname, '.', 'HTML', './00_Data.html'));
 });
 
 app.get('/WRITE', function(req, res){
-    res.sendFile(path.join(__dirname, '..', 'HTML', 'WRITE.html'));
+    res.sendFile(path.join(__dirname, '.', 'HTML', 'WRITE.html'));
 });
 
-
-
-app.get('/t', function(req, res){
-    res.sendFile(path.join(__dirname, '..', 'HTML', 'test.html'));
-});
 
 
 app.get('/FAQ', function(req, res){
-    res.sendFile(path.join(__dirname, '..', 'HTML', 'faq.html'));
+    res.sendFile(path.join(__dirname, '.', 'HTML', 'faq.html'));
 });
