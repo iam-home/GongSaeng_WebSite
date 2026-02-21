@@ -75,13 +75,14 @@ function randomStart() {
 
 client.auth.onAuthStateChange((event, session) => {
     const currenPath = window.location.pathname;
+    const publicPages = ['/index.html', '/HTML/faq.html'];
 
   if (event === 'SIGNED_IN') {
     console.log('Login:', session.user.email);
   }
-  else if (event === 'SIGNED_OUT' && currenPath !== './index.html') {
+  else if (event === 'SIGNED_OUT' && !publicPages.includes(currenPath)) {
     console.log('Logout');
-    location.href='/';
+    location.href='/'; // back?
     alert("이 페이지는 로그인이 필요합니다!");
   }
 });

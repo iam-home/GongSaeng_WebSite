@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FAQ | 공생</title>
   <!-- <meta name="description" content="자주 묻는 질문" /> -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="../JS/Login.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -30,6 +32,8 @@
     .accordion-content.open { max-height: 300px; }
     .accordion-chevron { transition: transform 0.3s ease; }
     .accordion-chevron.open { transform: rotate(180deg); }
+    .hidden-user { display: none !important; }
+    .mobile-hidden-user { display: none !important; }
   </style>
 </head>
 <body class="font-sans antialiased">
@@ -47,24 +51,32 @@
       <nav class="hidden items-center gap-1 md:flex">
         <a href="../index.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Home</a>
         <a href="./faq.html" class="rounded-md bg-brand px-3 py-2 text-sm font-medium text-brand-fg">FAQ</a>
-        <a href="./ToDo.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Schedule // 로그인 안 해도 보임. 고치셈</a>
+
+        <div id="UserNav" class="hidden-user flex items-center gap-1">
+        <a href="./ToDo.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Schedule</a>
         <a href="./TimeLine.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Activities</a>
         <a href="./Suggest.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary hover:text-secondary-fg">Suggestions</a>
-        <a href="./Login.html" class="ml-3 rounded-md border border-brand bg-bg px-4 py-2 text-sm font-medium text-brand hover:bg-brand hover:text-brand-fg transition-colors">Login</a>
+        </div>
+
+        <a id="login-btn" class="ml-3 rounded-md border border-brand bg-bg px-4 py-2 text-sm font-medium text-brand hover:bg-brand hover:text-brand-fg transition-colors" onclick="handleAuth()">Login</a>
       </nav>
       <button id="menuBtn" class="rounded-md p-2 text-fg md:hidden" aria-label="Toggle menu">
         <svg class="h-5 w-5" id="menuIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
         <svg class="h-5 w-5 hidden" id="closeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
     </div>
-    <div id="mobileMenu" class="hidden border-t border-border bg-bg px-6 pb-4 md:hidden">
+    <div id="mobileMenu" class="mobile-hidden border-t border-border bg-bg px-6 pb-4 md:hidden">
       <nav class="flex flex-col gap-1 pt-2">
         <a href="../index.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Home</a>
         <a href="./faq.html" class="rounded-md bg-brand px-3 py-2 text-sm font-medium text-brand-fg">FAQ</a>
+
+        <div id="mobileUserNav" class="mobile-hidden-user flex flex-col gap-1 pt-2">
         <a href="./ToDo.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Schedule</a>
         <a href="./TimeLine.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Activities</a>
         <a href="./Suggest.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Suggestions</a>
-        <a href="./Login.html" class="mt-2 rounded-md border border-brand bg-bg px-4 py-2 text-center text-sm font-medium text-brand hover:bg-brand hover:text-brand-fg transition-colors">Login</a>
+        </div>
+
+        <a id="mobile-login-btn" class="mt-2 rounded-md border border-brand bg-bg px-4 py-2 text-center text-sm font-medium text-brand hover:bg-brand hover:text-brand-fg transition-colors" onclick="handleAuth()">Login</a>
       </nav>
     </div>
   </header>
@@ -201,6 +213,31 @@
 
   <script>
 
+    async function init() {
+      const isLogin = await checkLogin();
+      const userNav = document.getElementById("UserNav");
+      const mobileUserNav = document.getElementById("mobileUserNav");
+      
+      if (isLogin) {
+        userNav.classList.remove("hidden-user");
+        mobileUserNav.classList.remove("mobile-hidden-user");
+        document.querySelector('#login-btn').innerHTML = 'Logout';
+        document.querySelector('#mobile-login-btn'),innerHTML = 'Logout';
+      }
+    }
+
+    async function handleAuth() {
+      const isLogin = await checkLogin();
+      if (isLogin) {
+        if (confirm("로그아웃 하시겠습니까?")) {
+          await client.auth.signOut();
+          location.reload();
+        }
+      } else {
+        location.href = './Login.html';
+      }
+    }
+
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const menuIcon = document.getElementById('menuIcon');
@@ -225,6 +262,8 @@
         }
       });
     });
+
+    document.addEventListener("DOMContentLoaded", init);
   </script>
 </body>
 </html>

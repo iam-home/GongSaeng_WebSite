@@ -57,6 +57,7 @@
         <a href="./ToDo.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Schedule</a>
         <a href="./TimeLine.html" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-secondary">Activities</a>
         <a href="./Suggest.html" class="rounded-md bg-brand px-3 py-2 text-sm font-medium text-brand-fg">Suggestions</a>
+        <button onclick="Logout()" id="authBtn" class="ml-3 rounded-md border border-brand bg-bg px-4 py-2 text-sm font-medium text-brand hover:bg-brand hover:text-brand-fg transition-colors">Logout</button>
       </nav>
     </div>
   </header>
@@ -152,6 +153,15 @@
         btn.innerHTML = "비공개로 보내기";
       }
     }
+
+    function Logout() {
+      if(typeof LoginPage === 'function') {
+        LoginPage(); 
+      } else {
+        client.auth.signOut().then(() => { location.href = './Login.html'; });
+      }
+    }
+
   </script>
 </body>
 </html>
