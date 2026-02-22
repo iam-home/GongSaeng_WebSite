@@ -75,7 +75,7 @@ function randomStart() {
 
 client.auth.onAuthStateChange((event, session) => {
     const currenPath = window.location.pathname;
-    const publicPages = ['/index.html', '/HTML/faq.html'];
+    const publicPages = ['/', '/HTML/faq.html'];
 
   if (event === 'SIGNED_IN') {
     console.log('Login:', session.user.email);

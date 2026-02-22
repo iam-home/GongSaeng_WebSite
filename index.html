@@ -121,12 +121,12 @@
           </p>
           
           <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row">
-            <a href="./HTML/TimeLine.html?from=index" class="group flex items-center gap-2 rounded-md bg-brand px-6 py-3 text-sm font-medium text-brand-fg hover:opacity-90 transition-all">
-              활동 보기 // 이거 고쳐야될듯. 가입 전에 뭘 하는지는 알아야되지않나
+            <a class="group flex items-center gap-2 rounded-md bg-brand px-6 py-3 text-sm font-medium text-brand-fg hover:opacity-90 transition-all" onclick="scrollToTarget()">
+              활동 보기
               <svg class="h-4 w-4 transition-transform group-hover:translate-x-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </a>
             <a href="./HTML/WRITE.html?from=index" class="flex items-center gap-2 rounded-md border border-border bg-bg px-6 py-3 text-sm font-medium text-fg hover:bg-secondary transition-colors">
-              문의하기 // 얘도 고쳐야될듯. 가입 전에 건의할 수 있는 무언가를 생각해야될거같음
+              문의하기 // 문의할 수 있게 하는 게 좋을 거 같긴 한데, 좋은 방법이 안 떠오름. 답변을 어케줌?
             </a>
           </div>
 
@@ -151,7 +151,7 @@
       </div>
     </section>
 
-    <section class="border-t border-border bg-card py-20 md:py-28">
+    <section id="whatWeDo" class="border-t border-border bg-card py-20 md:py-28">
       <div class="mx-auto max-w-6xl px-6">
         <div class="flex flex-col items-center text-center">
           <span class="font-mono text-xs font-bold uppercase tracking-widest text-brand">What We Do</span>
@@ -259,6 +259,13 @@
       } else {
         location.href = './HTML/Login.html';
       }
+    }
+
+    function scrollToTarget() {
+      document.querySelector("#whatWeDo").scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
     }
 
     const menuBtn = document.getElementById('menuBtn');

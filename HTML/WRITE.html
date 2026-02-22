@@ -85,7 +85,7 @@
         location.href = `${fromSource}.html`;
       }
     }
-
+    
     document.addEventListener("DOMContentLoaded", async () => {
       const urlParams = new URLSearchParams(window.location.search);
       editId = urlParams.get('id');
@@ -98,14 +98,26 @@
         document.querySelector("#pageTitle").innerText = editId ? "EDIT TIMELINE" : "NEW TIMELINE";
       } else if (fromSource === 'Suggest') {
         document.querySelector("#pageTitle").innerText = editId ? "EDIT SUGGESTION" : "NEW SUGGESTION";
-      } else { // fromSource === 'index'
-        document.querySelector("#titleContainer").classList.remove('hidden');
-        document.querySelector("#pageTitle").innerText = editId ? "EDIT INQUIRE" : "NEW INQUIRE";
       }
+      // else { // fromSource === 'index'
+      //   document.querySelector("#pageTitle").innerText = editId ? "EDIT INQUIRE" : "NEW INQUIRE";
+      // }
 
       if (editId) {
         document.querySelector("#register").innerHTML = "수정 완료";
         await loadExistingData(editId);
+      }
+
+      // if (fromSource === 'index') {
+      //   document.querySelector("#register").innerHTML = '보내기';
+      //   document.querySelector("#bodyValue").placeholder = '문의하고 싶은 것을 작성하세요?';
+      //   document.querySelector(".mt-6").innerHTML = '이쁘게 써라?';
+      // } else {
+      //   로그인했냐();
+      // }
+      if (fromSource === 'index') {
+        alert("아직 완성못함");
+        window.history.back();
       }
     });
 
@@ -141,9 +153,10 @@
         dataToInsert.title = title;
       } else if (fromSource === 'Suggest') {
         dataToInsert.user_id = session.user.id;
-      } else if (fromSource === 'index') {
-        dataToInsert.user_id = session.user.id;
       }
+      // else if (fromSource === 'index') {
+      //   dataToInsert.user_id = session.user.id;
+      // }
 
       if (editId) {
         const { error } = await client.from(fromSource).update(dataToInsert).eq('id', editId);
@@ -169,22 +182,13 @@
       const isLogin = await checkLogin();
       if (!isLogin && !location.href.includes('../index.html')) {
         alert("로그인한 사용자만 이용할 수 있는 페이지입니다.");
-        location.href = './Login.html';
+        window.history.back();
       }
     }
 
     // 로그인했냐();
     
-    document.addEventListener("DOMContentLoaded", async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      fromSource = urlParams.get('from');
-      
-      if (fromSource === 'index') {
-        document.querySelector("#register") = '보내기';
-      } else {
-        로그인했냐();
-      }
-    }
+
   </script>
 </body>
 </html>

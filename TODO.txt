@@ -27,3 +27,21 @@
 
 4
 + supabase storage or google drive
+
+
+
+
+index
+faq
+(완) Login
+
+(완) ToDo
+(완) TimeLine
+(완) Suggest
+
+write (문의기능 넣을지 말지)
+
+// Data
+
+
+(!) 완성이어도 글 안 바꾼 거 없나 확인하셈
