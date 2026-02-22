@@ -87,6 +87,8 @@
 
   <script>
     const adminEmails = ["SCRET_REMOVED"];
+    let fromSource = null;
+    
 
     async function TimeLineDB() {
       const { data: { session } } = await client.auth.getSession();
@@ -142,6 +144,17 @@
       document.querySelector("#Data").innerHTML = tag;
     }
 
+    document.addEventListener("DOMContentLoaded", async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        fromSource = urlParams.get('from');
+        
+        if (fromSource === 'index') {
+          TimeLineDB(); // 이거보단 페이지를 하나 더 만들든 아니면 인덱스 html에 더 추가하든 하는 게 좋을 거 같음
+        } else {
+          init();
+        }
+    }
+    
     function toggleMenu(index) {
       const allMenus = document.querySelectorAll('.dropdown-menu');
       const targetMenu = document.getElementById(`menu-${index}`);
@@ -184,7 +197,7 @@
       }
     };
 
-    init();
+    // init();
   </script>
 </body>
 </html>

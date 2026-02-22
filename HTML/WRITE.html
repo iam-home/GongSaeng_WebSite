@@ -96,8 +96,11 @@
         document.querySelector("#pageTitle").innerText = editId ? "EDIT SCHEDULE" : "NEW SCHEDULE";
       } else if (fromSource === 'TimeLine') {
         document.querySelector("#pageTitle").innerText = editId ? "EDIT TIMELINE" : "NEW TIMELINE";
-      } else {
+      } else if (fromSource === 'Suggest') {
         document.querySelector("#pageTitle").innerText = editId ? "EDIT SUGGESTION" : "NEW SUGGESTION";
+      } else { // fromSource === 'index'
+        document.querySelector("#titleContainer").classList.remove('hidden');
+        document.querySelector("#pageTitle").innerText = editId ? "EDIT INQUIRE" : "NEW INQUIRE";
       }
 
       if (editId) {
@@ -138,6 +141,8 @@
         dataToInsert.title = title;
       } else if (fromSource === 'Suggest') {
         dataToInsert.user_id = session.user.id;
+      } else if (fromSource === 'index') {
+        dataToInsert.user_id = session.user.id;
       }
 
       if (editId) {
@@ -168,7 +173,18 @@
       }
     }
 
-    로그인했냐();
+    // 로그인했냐();
+    
+    document.addEventListener("DOMContentLoaded", async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      fromSource = urlParams.get('from');
+      
+      if (fromSource === 'index') {
+        document.querySelector("#register") = '보내기';
+      } else {
+        로그인했냐();
+      }
+    }
   </script>
 </body>
 </html>
