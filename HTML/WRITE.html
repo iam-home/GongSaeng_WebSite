@@ -82,7 +82,12 @@
 
     function goBack() {
       if (confirm("작성 중인 내용은 저장되지 않습니다. 나가시겠습니까?")) {
-        location.href = `${fromSource}.html`;
+        if (fromSource !== 'index') {
+          location.href = `${fromSource}.html`;
+        } else {
+          window.history.back();
+          // location.href = '../index.html';
+        }
       }
     }
     
@@ -108,17 +113,14 @@
         await loadExistingData(editId);
       }
 
-      // if (fromSource === 'index') {
-      //   document.querySelector("#register").innerHTML = '보내기';
-      //   document.querySelector("#bodyValue").placeholder = '문의하고 싶은 것을 작성하세요?';
-      //   document.querySelector(".mt-6").innerHTML = '이쁘게 써라?';
-      // } else {
-      //   로그인했냐();
-      // }
       if (fromSource === 'index') {
-        alert("아직 완성못함");
-        window.history.back();
+        document.querySelector("#register").innerHTML = '보내기';
+        document.querySelector("#bodyValue").placeholder = '문의하고 싶은 것을 작성하세요.\n답변을 받을 이메일 또는 카톡 등을 같이 입력해주세요.\n입력하지 않으면 답변을 보낼 수 없습니다!';
+        document.querySelector(".mt-6").innerHTML = '';
+      } else {
+        로그인했냐();
       }
+
     });
 
     async function loadExistingData(id) {
@@ -148,18 +150,25 @@
       }
 
       let dataToInsert = { body: body };
+      let targetTable = fromSource;
       
       if (fromSource === 'ToDo') {
         dataToInsert.title = title;
       } else if (fromSource === 'Suggest') {
         dataToInsert.user_id = session.user.id;
       }
-      // else if (fromSource === 'index') {
-      //   dataToInsert.user_id = session.user.id;
-      // }
+      else if (fromSource === 'index') {
+        targetTable = 'Suggest';
+    if (session) {
+      dataToInsert.user_id = session.user.id;
+      dataToInsert.is_guest = false;
+    } else {
+      dataToInsert.is_guest = true;
+    }
+      }
 
       if (editId) {
-        const { error } = await client.from(fromSource).update(dataToInsert).eq('id', editId);
+        const { error } = await client.from(targetTable).update(dataToInsert).eq('id', editId);
         if (!error) {
           alert("수정되었습니다!");
           location.href = `${fromSource}.html`;
@@ -167,10 +176,15 @@
           alert("수정 실패: " + error.message);
         }
       } else {
-        const { error } = await client.from(fromSource).insert([dataToInsert]);
+        const { error } = await client.from(targetTable).insert([dataToInsert]);
         if (!error) {
           alert("등록되었습니다!");
-          location.href = `${fromSource}.html`;
+          if (fromSource !== 'index') {
+            location.href = `${fromSource}.html`;
+          } else {
+            window.history.back();
+            // location.href = '../index.html';
+          }
         } else {
           console.error("에러 발생:", error.message);
           alert("저장에 실패했습니다.");

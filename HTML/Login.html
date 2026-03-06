@@ -55,7 +55,7 @@
     <section class="relative grid-bg bg-bg py-16 md:py-24">
       <div class="mx-auto max-w-md px-6">
         <div class="flex flex-col items-center text-center">
-          <h1 class="text-2xl font-bold tracking-tight text-fg md:text-3xl">공생 Portal // 별로다</h1>
+          <h1 class="text-2xl font-bold tracking-tight text-fg md:text-3xl">공생</h1>
           <p class="mt-2 text-sm text-muted">지속 가능한 미래를 위한 첫 걸음</p>
         </div>
 
@@ -101,8 +101,11 @@
         </div>
 
         <div class="mt-8 rounded-lg border border-border bg-secondary p-5 text-center">
-            문의: <span class="font-medium text-brand">ecomech@university.ac.kr</span>
+            문의: <span class="font-medium text-brand">여다가 문의사항 페이지로 이동</span>
         </div>
+        <!-- <a href="./WRITE.html?from=index" class="flex items-center gap-2 rounded-md border border-border bg-bg px-6 py-3 text-sm font-medium text-fg hover:bg-secondary transition-colors">
+              문의하기
+          </a> -->
       </div>
     </section>
   </main>
@@ -146,7 +149,7 @@
       if (error) {
         alert("로그인 실패: " + error.message);
       } else {
-        alert("반갑습니다!");
+        randomStart(); // random fuck u
         window.history.back();
       }
     }
@@ -159,7 +162,7 @@
     const code = document.getElementById("regCode").value;
     
     if (!id || !password || !code) {
-        alert("모든 필드를 입력해주세요. // 말이 왜이래이거");
+        alert("모두 입력해주세요.");
         return;
     }
     

@@ -53,6 +53,10 @@ app.get('/WRITE', function(req, res){
     res.sendFile(path.join(__dirname, '.', 'HTML', 'WRITE.html'));
 });
 
+app.get('/ad', function(req, res){
+    res.sendFile(path.join(__dirname, '.', 'HTML', 'adminPage.html'));
+});
+
 
 
 app.get('/FAQ', function(req, res){

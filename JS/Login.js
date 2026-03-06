@@ -2,7 +2,9 @@ const supabaseUrl = 'SECRET_REMOVED';
 const supabaseKey = 'SCRET_REMOVED';
 const client = supabase.createClient(supabaseUrl, supabaseKey);
 
-const message = ["안녕하세요", "감사합니다", "반편성이게맞음?", "졸리다"];
+const message = ["안녕하세요", "감사합니다", "반갑습니다!", "반짝반짝 작은별"];
+// fucked = true
+
 // let 변수 = 0; // 함수에 매개변수 넣고 쓰면 됨.
 
 // async function signInWithEmail() {
@@ -70,7 +72,8 @@ function getRandomMessage(bool, message) {
 function randomStart() {
     const selectedMessage = getRandomMessage(true, message);
     alert(selectedMessage);
-    window.history.back(); // 로그인 문제있을 때 얘 끄고 콘솔 찍어보셈
+    location.href = '../index.html';
+    // window.history.back(); // 로그인 문제있을 때 얘 끄고 콘솔 찍어보셈
 }
 
 client.auth.onAuthStateChange((event, session) => {
