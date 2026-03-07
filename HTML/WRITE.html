@@ -196,7 +196,7 @@
       const isLogin = await checkLogin();
       if (!isLogin && !location.href.includes('../index.html')) {
         alert("로그인한 사용자만 이용할 수 있는 페이지입니다.");
-        window.history.back();
+        window.location.replace("../index.html");
       }
     }
 

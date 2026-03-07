@@ -171,8 +171,8 @@
     async function init() {
       const isLogin = await checkLogin();
       if (!isLogin) {
+        window.location.replace("../index.html");
         alert("로그인이 필요한 페이지입니다.");
-        window.history.back();
         return;
       }
       TimeLineDB();

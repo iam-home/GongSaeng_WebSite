@@ -8,7 +8,7 @@
  * 
  * cd "C:\School_Programming\_WebSite\WebSite"
  * 
- * netlify로 올리면서 여기는 안 쓰는건가
+ * 여기는 이제 안 쓰는건가
  */
 
 const express = require('express');

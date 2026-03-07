@@ -98,8 +98,8 @@
     async function checkAuth() {
       const isLogin = await checkLogin();
       if (!isLogin) {
+        window.location.replace("../index.html");
         alert("로그인한 사용자만 이용할 수 있는 페이지입니다.");
-        window.history.back();
         return;
       }
 

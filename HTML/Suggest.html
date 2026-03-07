@@ -111,8 +111,8 @@
     async function checkAuth() {
       const isLogin = await checkLogin();
       if (!isLogin) {
+        window.location.replace("../index.html");
         alert("로그인한 사용자만 건의사항을 작성할 수 있습니다.");
-        window.history.back();
       }
     }
     checkAuth();
