@@ -1,5 +1,5 @@
-const supabaseUrl = 'SECRET_REMOVED';
-const supabaseKey = 'SCRET_REMOVED';
+
+
 const client = supabase.createClient(supabaseUrl, supabaseKey);
 
 const message = ["안녕하세요", "감사합니다", "반갑습니다!", "반짝반짝 작은별"];
