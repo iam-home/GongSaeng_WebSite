@@ -1,4 +1,4 @@
-.github/workflows/supabase_wake_up.yml
+#.github/workflows/supabase_wake_up.yml
 
 name: Supabase Keep Alive
 
