@@ -132,14 +132,7 @@
       try {
         const { data: { session } } = await client.auth.getSession();
         
-        const { error } = await client
-          .from('Suggest')
-          .insert([
-            { 
-              body: content, 
-              user_id: session?.user?.id 
-            }
-          ]);
+        const { error } = await client.from('Suggest').insert([{ body: content, user_id: session?.user?.id }]);
 
         if (error) throw error;
 

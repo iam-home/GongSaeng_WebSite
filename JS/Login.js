@@ -1,4 +1,5 @@
-
+const supabaseUrl='SECRET_REMOVED';
+const supabaseKey='SCRET_REMOVED';
 
 const client = supabase.createClient(supabaseUrl, supabaseKey);
 

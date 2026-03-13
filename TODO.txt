@@ -23,29 +23,4 @@
 
 
 + 자료실
-+ 디자인
-
-4
-+ supabase storage or google drive
-
-
-
-
-(게임 설계, 생명/공학 융합이라는 글을 바꿀지 말지) index
-(완) faq
-(완) Login
-
-(완) ToDo
-(완) TimeLine
-(완) Suggest
-
-// Data
-
-
-(!) 완성이어도 글 안 바꾼 거 없나 확인하셈
-
-
-
-공학 : 분실물, 분리수거
-생명 : 염화칼슘 성분 파악 및 대체품
-융합 : 게임 개발
+supabase storage or google drive

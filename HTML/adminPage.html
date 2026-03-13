@@ -62,11 +62,21 @@
   </main>
 
   <script>
+    async function 어드민이냐() {
+      const { data: { session } } = await client.auth.getSession();
+      const adminEmails = ["SCRET_REMOVED"];
+      const isAdmin = session && adminEmails.includes(session.user.email);
+
+      if(isAdmin) admin();
+      else {
+        window.location.replace("../index.html");
+        alert("출입금지");
+      };
+    
+    }
+
     async function admin() {
-      let { data: records, error } = await client
-        .from("Suggest")
-        .select("*")
-        .order('created_at', { ascending: false });
+      let { data: records, error } = await client.from("Suggest").select("*").order('created_at', { ascending: false });
 
       if (error) {
           console.error("Error fetching data:", error);
@@ -123,7 +133,7 @@
         }
     }
 
-    admin();
+    어드민이냐()
   </script>
 </body>
 </html>
