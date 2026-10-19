@@ -53,7 +53,7 @@
       <div class="border-b border-border bg-bg/50 px-6 py-4">
         <h2 class="font-mono text-sm font-bold uppercase tracking-widest">Inbound Records</h2>
       </div>
-      
+
       <div id="Data" class="divide-y divide-border">
         <div class="flex items-center justify-center py-20">
           <p class="animate-pulse text-muted">데이터를 불러오는 중입니다...</p>
@@ -65,7 +65,7 @@
   <script>
     async function 어드민이냐() {
       const { data: { session } } = await client.auth.getSession();
-      const adminEmails = ["SCRET_REMOVED"];
+      const adminEmails = [CONFIG.ADMIN.email];
       const isAdmin = session && adminEmails.includes(session.user.email);
 
       if(isAdmin) admin();
@@ -73,7 +73,7 @@
         window.location.replace("../index.html");
         alert("출입금지");
       };
-    
+
     }
 
     async function admin() {
@@ -97,7 +97,7 @@
                   month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
               });
 
-              const userLabel = item.is_guest 
+              const userLabel = item.is_guest
                   ? `<span class="rounded bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500 uppercase tracking-tighter">Guest</span>`
                   : `<span class="rounded bg-brand/10 px-2 py-0.5 text-[10px] font-bold text-brand uppercase tracking-tighter">Member</span>`;
 
