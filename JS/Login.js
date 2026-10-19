@@ -1,29 +1,11 @@
-const supabaseUrl='SECRET_REMOVED';
-const supabaseKey='SCRET_REMOVED';
+import { CONFIG } from '../config.js'
+import { ADMIN } from '../config.js'
 
+const { supabaseUrl, supabaseKey } = CONFIG;
 const client = supabase.createClient(supabaseUrl, supabaseKey);
 
 const message = ["안녕하세요", "감사합니다", "반갑습니다!", "반짝반짝 작은별"];
-// fucked = true
-
-// let 변수 = 0; // 함수에 매개변수 넣고 쓰면 됨.
-
-// async function signInWithEmail() {
-//     const ID = document.querySelector("#ID").value;
-//     const email = `${ID}@gmail.com`; // 한 사람당 계정 하나 할라면 위에서 유저네임 받고, 여기서 뒤에 @gmail.com 붙여서 밑에서 처리하셈
-//     const password = document.querySelector("#password").value;
-    
-//     const { data, error } = await client.auth.signInWithPassword({
-//         email: email,
-//         password: password,
-//     });
-    
-//     if (error) {
-//         alert("로그인 실패: " + error.message);
-//     } else {
-//         randomStart()
-//     }
-// }
+// let fucked = true;
 
 async function signOut() {
     await client.auth.signOut();
@@ -32,7 +14,7 @@ async function signOut() {
 
 async function checkLogin() {
     const { data: { session } } = await client.auth.getSession();
-    
+
     if (session) { // 로그인 했을 때
         // console.log("Login"); // 이거 반복해서 출력됨. 그래서 없애버림ㅋ
         return true; // isLogin
@@ -44,13 +26,13 @@ async function checkLogin() {
 
     async function LoginPage() {
       const isLogin = await checkLogin();
-      
+
       if (isLogin) {
         const { error } = await client.auth.signOut();
         const logoutBtn = document.querySelector("#auth-btn");
         if (logoutBtn) logoutBtn.addEventListener("click", signOut);
       }
-      
+
     }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -89,8 +71,8 @@ client.auth.onAuthStateChange((event, session) => {
 
 async function isadmin() {
     const { data: { session } } = await client.auth.getSession();
-    const adminEmails = ["SCRET_REMOVED"];
-    const isAdmin = session && adminEmails.includes(session.user.email);
-    
+    const adminEmails = ADMIN.email;
+    const isAdmin = session && adminEmails === session.user.email;
+
     if (isAdmin) document.querySelector("#admin").style.display = "block";
-    }
+}
